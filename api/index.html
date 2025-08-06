@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Chukspace Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         header {
@@ -20,7 +23,7 @@
 
         .container {
             display: flex;
-            height: calc(100vh - 70px); /* Full height minus header */
+            height: calc(100vh - 70px);
         }
 
         nav {
@@ -29,7 +32,9 @@
             color: white;
             padding-top: 1rem;
             position: fixed;
-            height: 100%;
+            top: 70px;
+            bottom: 0;
+            left: 0;
             overflow-y: auto;
         }
 
@@ -59,20 +64,20 @@
 </head>
 <body>
     <header>
-        🕊️ Chukspace – Data Stewardship
+        🕊️ Chukspace – Stewardship Dashboard
     </header>
 
     <div class="container">
         <nav>
-            <a href="#" onclick="loadApp('https://www.chukspace.fyi/')">AGT Sheffield CRM</a>
-            <a href="#" onclick="loadApp('https://your-church-b-app-url.com')">Church B CRM</a>
-            <a href="#" onclick="loadApp('/static/Chukedia Policy Statement.pdf')">Policy Statement</a>
-            <a href="#" onclick="loadApp('/static/service-plan.html')">Service Plan</a>
-            <a href="#" onclick="loadApp('/static/about.html')">About</a>
+            <a href="#" onclick="loadApp('https://your-church-a-app.vercel.app')">Church A CRM</a>
+            <a href="#" onclick="loadApp('https://your-church-b-app.vercel.app')">Church B CRM</a>
+            <a href="#" onclick="loadApp('static/Chukedia_Policy_Statement.pdf')">Policy Statement</a>
+            <a href="#" onclick="loadApp('static/service-plan.pdf')">Service Plan</a>
+            <a href="#" onclick="loadApp('about.html')">About</a>
         </nav>
 
         <main>
-            <iframe id="app-frame" src="" title="App Frame"></iframe>
+            <iframe id="app-frame" src="about.html" title="App Frame"></iframe>
         </main>
     </div>
 
@@ -80,11 +85,6 @@
         function loadApp(url) {
             document.getElementById('app-frame').src = url;
         }
-
-        // Load default page
-        window.onload = function() {
-            loadApp('/static/about.html');
-        };
     </script>
 </body>
 </html>
