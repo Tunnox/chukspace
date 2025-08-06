@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CDMA Tools Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #012d3a;
+      --card-color: #f9f9f9;
+    }
+    [data-theme="dark"] {
+      --bg-color:rgb(2, 2, 2);
+      --text-color: #f0f0f0;
+      --card-color:rgb(0, 0, 0);
+    }
+    * {
+  box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
+      height: 100%;
+
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      max-width: 100vw;
+      width: 100%;
+    }
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #012d3a; /* Matches sidebar */
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 1000; /* Make sure it stays above other elements */
+    }
+    .top-header h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      width: 32px;
+      height: 32px;
+    }
+
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .profile-card img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+    .sidebar {
+      position: fixed;
+      width: 150px;
+      background-color: #012d3a;
+      color: white;
+      top: 60px;
+      left: 0;
+      bottom: 0;
+      padding-top: 20px;
+    }
+    .sidebar .nav-links button {
+      display: block;
+      background: none;
+      border: none;
+      color: white;
+      text-align: left;
+      padding: 12px 20px;
+      width: 100%;
+      cursor: pointer;
+    }
+    .sidebar .nav-links button:hover {
+      background-color: #014357;
+    }
+    .secondary-sidebar {
+      position: fixed;
+      top: 60px;
+      left: 150px;
+      width: 170px;
+      background-color: #064052;
+      color: white;
+      padding-top: 20px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      display: none; /* Hidden by default */
+    }
+    .main-content {
+      margin-left: 320px;
+      padding: 30px;
+      padding-bottom: 80px;
+      margin-top: 60px;
+      background: var(--bg-color);
+      min-height: calc(100vh - 120px);
+      width: 150%;
+      overflow-x: auto;
+      max-width: calc(100vw - 320px);
+      overflow-y: auto;
+      bottom: 50px;
+    }
+    section {
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #012d3a;
+      color: white;
+    }
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 16px;
+      background: none;
+      border: 1px solid white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: white;
+    }
+    h2 {
+      color: #014357;
+    }
+
+    input[type="text"], textarea, input[type="number"], input[type="file"] {
+      width: 40%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #014357;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #126b83;
+    }
+
+    .WordCount, #charCount {
+      margin-right: 10px;
+      background-color: #eef1ed;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
+      background-color:rgb(47, 59, 63);
+      color: white;
+      text-align: center;
+      padding-top: 15px;
+      z-index: 999;
+}
+#calendarView {
+      max-width: 100%;
+      margin: 0 auto;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="top-header">
+  <div class="header-brand">
+  <img src="https://cdn-icons-png.flaticon.com/512/3178/3178379.png" alt="Data Steward Logo" class="header-logo">
+  <h1>CDMA Dashboard</h1>
+</div>
+  <div class="profile-card">
+    <img src="https://www.gravatar.com/avatar?d=mp" alt="Profile" />
+    <span>Chuk Umunna</span>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Theme</button>
+  </div>
+</header>
+
+<!-- Sidebars -->
+<div class="sidebar">
+  <div class="nav-links">
+    <button onclick="switchPrimary('home')">🏠 Home</button>
+    <button id="toolsBtn" onmouseenter="revealSidebar('tools')">🛠️ Tools</button>
+    <button id="dataBtn" onmouseenter="revealSidebar('data')">📦 Data Management</button>
+    <button id="aboutBtn" onmouseenter="revealSidebar('about')">👤 About Me</button>
+  </div>
+</div>
+
+<div class="secondary-sidebar" id="secondarySidebar">
+  <div class="nav-links" id="secondaryLinks"></div>
+</div>
+
+<!-- Content -->
+<div class="main-content" id="mainContent">
+  <section id="home" class="active">
+    <h2>Welcome</h2>
+    <p>This is a dashboard of free data management tools for data stewards, analysts, and automation specialists.</p>
+<h2>My Dashboard</h2>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="tasks-tab" data-toggle="tab" href="#tasks" role="tab">Upcoming Task</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab">Issues Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="calendar-tab" data-toggle="tab" href="#calendar" role="tab">My-Calendar</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="achievements-tab" data-toggle="tab" href="#achievements" role="tab">Achievements</a>
+      </li>
+
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content" id="dashboardTabsContent">
+
+      <!-- Tasks Tab -->
+      <div class="tab-pane fade show active" id="tasks" role="tabpanel">
+        <h3 class="mt-3">Task Management</h3>
+        <form id="taskForm" action="/manager" class="form-inline mb-3">
+          <input type="text" class="form-control mr-2" id="taskTitle" placeholder="Task Title" required />
+          <select class="form-control mr-2" id="taskStatus">
+            <option>Pending</option>
+            <option>In Progress</option>
+            <option>Completed</option>
+          </select>
+          <button type="submit" class="btn btn-primary">Add Task</button>
+        </form>
+
+        <div id="taskList">
+          {% for task in tasks %}
+            <div class="card mb-2">
+              <div class="card-body">
+                <h5 class="card-title">{{ task.title }}</h5>
+                <p class="card-text">Status: {{ task.status }}</p>
+                <button class="btn btn-sm btn-warning hide-task" data-id="{{ task.id }}">Hide</button>
+                <button class="btn btn-sm btn-danger delete-task" data-id="{{ task.id }}">Delete</button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Issues Tab -->
+      <div class="tab-pane fade" id="issues" role="tabpanel">
+        <h3 class="mt-3">Issues Tracker</h3>
+        <form id="issueForm" class="form-inline mb-3">
+          <input type="text" class="form-control mr-2" id="issueDesc" placeholder="Issue Description" required />
+          <select class="form-control mr-2" id="issueStatus">
+            <option>Open</option>
+            <option>Resolved</option>
+          </select>
+          <button type="submit" class="btn btn-danger">Add Issue</button>
+        </form>
+
+        <ul class="list-group" id="issueList">
+          {% for issue in issues %}
+            <li class="list-group-item">
+              <strong>ID: {{ issue.id }}</strong> - {{ issue.description }}
+              <span class="badge badge-{{ 'danger' if issue.status == 'Open' else 'success' }} float-right">{{ issue.status }}</span>
+              <button class="btn btn-sm btn-warning hide-task" data-id="{{ task.id }}">Hide</button>
+              <button class="btn btn-sm btn-danger delete-task" data-id="{{ task.id }}">Delete</button>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Calendar Tab -->
+      <div class="tab-pane fade" id="calendar" role="tabpanel">
+        <h3 class="mt-3">My-Calendar</h3>
+
+        <form id="calendarForm" class="form-inline mb-3">
+          <input type="datetime-local" class="form-control mr-2" id="eventDateTime" required />
+          <input type="text" class="form-control mr-2" id="eventDesc" placeholder="Event Description" required />
+          <button type="submit" class="btn btn-success">Add Event</button>
+        </form>
+
+        <div id="calendarView"style="width: 100%; margin-bottom: 40px;"></div>
+      </div>
+
+        <!-- Achievements Tab -->
+  <div class="tab-pane fade" id="achievements" role="tabpanel">
+   <h3 class="mt-3">Achievements</h3>
+   <form id="achievementForm" class="mb-3">
+
+    <div class="mb-2">
+      <input type="text" class="form-control" id="achTask" placeholder="Task Name" required />
+    </div>
+
+    <div class="mb-2">
+      <textarea class="form-control" id="achDesc" placeholder="Description" required></textarea>
+    </div>
+
+    <div class="mb-2">
+      <input type="text" class="form-control" id="achProject" placeholder="Project Name" required />
+    </div>
+
+    <div class="mb-2">
+      <input type="text" class="form-control" id="achManager" placeholder="Project Manager" required />
+    </div>
+
+    <div class="mb-2">
+      <input type="date" class="form-control" id="achStart" required />
+    </div>
+
+    <div class="mb-2">
+      <input type="date" class="form-control" id="achEnd" required />
+    </div>
+
+    <div class="mb-2">
+      <select class="form-control" id="achStatus">
+        <option>Completed</option>
+        <option>In Progress</option>
+        <option>Cancelled</option>
+      </select>
+    </div>
+
+    <div class="mb-2">
+      <textarea class="form-control" id="achComment" placeholder="Comment"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit Achievement</button>
+
+   </form>
+   </div> 
+  </section>
+  <script>
+    function showSection(id) {
+      // Hide all sections
+      const sections = document.querySelectorAll('section');
+      sections.forEach(sec => sec.classList.remove('active'));
+
+      // Remove active class from buttons
+      const buttons = document.querySelectorAll('.nav-links button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      // Show selected section and highlight button
+      document.getElementById(id).classList.add('active');
+      const btn = Array.from(buttons).find(b => b.textContent.toLowerCase().includes(id.split('-')[0]));
+      if (btn) btn.classList.add('active');
+    }
+
+    function countText() {
+      const text = document.getElementById('textInput').value;
+      fetch('/count', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'text=' + encodeURIComponent(text)
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('wordCount').innerText = 'Words: ' + data.words;
+        document.getElementById('charCount').innerText = 'Characters: ' + data.characters;
+      });
+    }
+  </script>
+   <!-- Inject Server Events as JSON -->
+    <script>
+      const serverEvents = {{ events | default([]) | tojson }};
+    </script>
+
+    <!-- JS Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <!-- App Scripts -->
+    <script>
+      // Task Form
+      document.getElementById("taskForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const title = document.getElementById("taskTitle").value;
+    const status = document.getElementById("taskStatus").value;
+
+    fetch('/add_task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, status })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        const card = document.createElement("div");
+        card.className = "card mb-2";
+        card.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title">${title}</h5>
+            <p class="card-text">Status: ${status}</p>
+          </div>`;
+        document.getElementById("taskList").appendChild(card);
+        document.getElementById("taskForm").reset();
+      } else {
+        alert("Failed to add task.");
+      }
+    });
+   });
+
+
+      // Issue Form
+      document.getElementById("issueForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const desc = document.getElementById("issueDesc").value;
+    const status = document.getElementById("issueStatus").value;
+    const badgeClass = status === "Open" ? "danger" : "success";
+
+    fetch('/add_issue', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description: desc, status })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        const item = document.createElement("li");
+        item.className = "list-group-item";
+        item.innerHTML = `<strong>ID: ${data.issue.id}</strong> - ${desc}
+          <span class="badge badge-${badgeClass} float-right">${status}</span>`;
+        document.getElementById("issueList").appendChild(item);
+        document.getElementById("issueForm").reset();
+      } else {
+        alert("Failed to add issue.");
+      }
+    });
+   });
+
+      // FullCalendar Setup
+      document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendarView');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      events: serverEvents,
+    });
+    calendar.render();
+
+    // Add Event
+    document.getElementById("calendarForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const date = document.getElementById("eventDateTime").value;
+      const desc = document.getElementById("eventDesc").value;
+
+      fetch('/add_event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: desc, start: date })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          calendar.addEvent({
+            title: desc,
+            start: date,
+            allDay: false
+          });
+          document.getElementById("calendarForm").reset();
+        } else {
+          alert("Failed to add event.");
+        }
+      });
+    });
+   });
+
+   // Add achievements
+   document.getElementById("achievementForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const data = {
+      task: document.getElementById("achTask").value,
+      description: document.getElementById("achDesc").value,
+      project: document.getElementById("achProject").value,
+      manager: document.getElementById("achManager").value,
+      date_started: document.getElementById("achStart").value,
+      date_ended: document.getElementById("achEnd").value,
+      status: document.getElementById("achStatus").value,
+      comment: document.getElementById("achComment").value
+    };
+
+    fetch('/add_achievement', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.status === 'success') {
+        alert("Achievement recorded.");
+        document.getElementById("achievementForm").reset();
+      } else {
+        alert("Failed to save achievement.");
+      }
+    });
+   });
+    </script>
+
+<!--END-->
+  <section id="folder-reporting">
+  <h2>📂Folder Reporting</h2>
+  <form id="folderForm" enctype="multipart/form-data">
+    <input type="file" name="folder_zip" accept=".zip" required />
+    <button type="submit">Generate Report</button>
+  </form>
+  <div id="reportStatus" style="margin-top: 1em;"></div>
+  <div id="reportTable" style="margin-top: 1em;"></div>
+
+  <script>
+    const folderUploadForm = document.getElementById('folderForm');
+    const reportTable = document.getElementById('reportTable');
+    const reportStatus = document.getElementById('reportStatus');
+
+    folderUploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(folderUploadForm);
+      reportStatus.textContent = 'Generating report...';
+      reportTable.innerHTML = '';
+
+      try {
+        const response = await fetch('/folder_report', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          reportStatus.textContent = `Error: ${data.error}`;
+        } else {
+          reportStatus.textContent = '';
+          renderTable(data);
+        }
+      } catch (error) {
+        reportStatus.textContent = 'An unexpected error occurred.';
+      }
+    });
+
+    function renderTable(data) {
+      let html = '<table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width: 100%;">';
+
+      for (const key in data) {
+        html += '<tr>';
+        html += `<th style="text-align: left; background-color: #f0f0f0;">${key}</th>`;
+
+        const value = data[key];
+        if (Array.isArray(value)) {
+          html += `<td>${value.length > 0 ? '<ul>' + value.map(item => `<li>${item}</li>`).join('') + '</ul>' : 'None'}</td>`;
+        } else if (typeof value === 'object' && value !== null) {
+          html += `<td><ul>${Object.entries(value).map(([k, v]) => `<li><strong>${k}:</strong> ${Array.isArray(v) ? v.join(', ') : v}</li>`).join('')}</ul></td>`;
+        } else {
+          html += `<td>${value}</td>`;
+        }
+
+        html += '</tr>';
+      }
+
+      html += '</table>';
+      reportTable.innerHTML = html;
+    }
+  </script>
+<!--End of - Folder Report Generator -->
+</section>
+<!--Text Counter-->
+  <section id="text-counter">
+      <h2>Text Counter</h2>
+      <textarea id="textInput" rows="6" oninput="countText()"></textarea>
+      <div>
+        <div id="wordCount" class="WordCount">Words: 0</div>
+        <div id="charCount">Characters: 0</div>
+      </div>
+</section>
+<!--Text Counter END-->
+
+<!--Json to CSV converter-->
+  <section id="json-csv">
+<h2>JSON to CSV Converter</h2>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".json" required />
+    <button type="submit">Convert & Download</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      
+      status.textContent = "Converting...";
+
+      try {
+        const response = await fetch('/convert', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          status.textContent = `Error: ${errorData.error}`;
+          return;
+        }
+
+        // Trigger download
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'converted.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        status.textContent = "Download complete.";
+      } catch (error) {
+        status.textContent = "Error during conversion.";
+      }
+    });
+    
+  </script>
+</section>
+<!--Json to CSV converter END-->
+<!--Paths GENERATOR-->
+  <section id="path-generator">
+<h2>Path Generator</h2>
+
+    <div id="drop-zone">
+      <p>Drag & drop a folder here or use the picker below:</p>
+      <input type="file" id="folderInput" webkitdirectory directory multiple>
+      <br><br>
+      <button id="submitBtn">Generate</button>
+    </div>
+
+    <div id="results"></div>
+    <br>
+    <button id="downloadBtn" style="display:none;">Download CSV</button>
+  </section>
+
+  <script>
+    let lastData = [];
+
+    const dropZone = document.getElementById("drop-zone");
+    const input = document.getElementById("folderInput");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Drag & Drop Events
+    dropZone.addEventListener("dragover", function (e) {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", function () {
+      dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", function (e) {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+
+      const items = e.dataTransfer.items;
+      if (!items) return;
+
+      let files = [];
+      const traverseFileTree = (item, path = "") => {
+        if (item.isFile) {
+          item.file(file => {
+            file.fullPath = path + file.name;
+            files.push(file);
+          });
+        } else if (item.isDirectory) {
+          const dirReader = item.createReader();
+          dirReader.readEntries(entries => {
+            for (let entry of entries) {
+              traverseFileTree(entry, path + item.name + "/");
+            }
+          });
+        }
+      };
+
+      for (let i = 0; i < items.length; i++) {
+        const entry = items[i].webkitGetAsEntry();
+        if (entry) traverseFileTree(entry);
+      }
+
+      setTimeout(() => {
+        uploadFiles(files);
+      }, 1000); // Delay to ensure files list is populated
+    });
+
+    submitBtn.addEventListener("click", function () {
+      const files = input.files;
+      if (!files.length) return alert("No files selected.");
+      uploadFiles(files);
+    });
+
+    function uploadFiles(files) {
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i], files[i].webkitRelativePath || files[i].name);
+      }
+
+      fetch("/upload_folder", {
+        method: "POST",
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById("results").innerText = data.error;
+            document.getElementById("downloadBtn").style.display = "none";
+          } else {
+            lastData = data;
+            displayTable(data);
+            document.getElementById("downloadBtn").style.display = "inline-block";
+          }
+        });
+    }
+
+    function displayTable(data) {
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+
+      const headers = ["Name", "Path", "Type", "Extension"];
+      headers.forEach(header => {
+        const th = document.createElement("th");
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      data.forEach(row => {
+        const tr = document.createElement("tr");
+        headers.forEach(h => {
+          const td = document.createElement("td");
+          td.textContent = row[h] || "";
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+
+      container.appendChild(table);
+    }
+
+    document.getElementById("downloadBtn").addEventListener("click", function () {
+      fetch("/download_csv", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lastData)
+      })
+        .then(response => response.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "folder_contents.csv";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        });
+    });
+  </script>
+
+  <!--Paths GENERATOR END-->
+  <!--Batch COPY-->
+  <section id="batch-copy">
+      <h2>Batch Copy File</h2>
+      <p>Copies files from a spreadsheet with file paths to designated folders.</p>
+
+  </section>
+  <!--END of Btch COPY-->
+  <!--BBox SINGLE-->
+  <section id="bbox-single">
+    <h2>Bounding Box Generator (Single Point)</h2>
+
+  <input type="text" id="coordinates" placeholder="Enter location">
+  <button onclick="submitCoordinates()">Generate</button>
+
+  <div id="map-container" style="margin-top: 20px;"></div>
+
+  <!-- Bounding Box Info Will Be Injected Here -->
+  <div id="bbox-list" class="bbox-container"></div>
+
+  <style>
+    .bbox-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .bbox-item {
+      padding: 10px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .west { background-color: #1abc9c; }   /* Teal */
+    .east { background-color: #3498db; }   /* Blue */
+    .south { background-color: #e67e22; }  /* Orange */
+    .north { background-color: #9b59b6; }  /* Purple */
+  </style>
+
+  <script>
+    function submitCoordinates() {
+      const coordinates = document.getElementById('coordinates').value;
+
+      fetch('/geobox', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ coordinates: coordinates })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.bounding_box) {
+                const bbox = data.bounding_box;
+                const bboxList = `
+                  <div class="bbox-item west">West Limit: ${bbox.west}</div>
+                  <div class="bbox-item east">East Limit: ${bbox.east}</div>
+                  <div class="bbox-item south">South Limit: ${bbox.south}</div>
+                  <div class="bbox-item north">North Limit: ${bbox.north}</div>
+                `;
+                document.getElementById('bbox-list').innerHTML = bboxList;
+            } else {
+                console.warn('Bounding box not returned in response.');
+            }
+          if (data.error) {
+              alert(data.error);
+          } else {
+              // Show the map
+              document.getElementById('map-container').innerHTML = data.map_html;
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+    }
+  </script>
+  </section>
+  <!--END of BBox SINGLE-->
+  <!--BBox MULTIPLE-->
+  <section id="bbox-multi">
+    <h2>Bounding Box Generator (Multiple Points)</h2>
+
+  <input type="text" id="multi-coordinates" placeholder="lat,lon;lat,lon;..." required />
+  <button onclick="submitMultipleCoordinates()">Generate</button>
+
+  <div id="multi-map-container" style="margin-top: 20px;"></div>
+
+  <!-- Bounding Box Info Will Be Injected Here -->
+  <div id="multi-bbox-list" class="bbox-container"></div>
+
+  <script>
+    function submitMultipleCoordinates() {
+      const coordinates = document.getElementById('multi-coordinates').value;
+
+      fetch('/geobox_multiple', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ coordinates: coordinates })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.bounding_box) {
+              const bbox = data.bounding_box;
+              const bboxList = `
+                <div class="bbox-item west">West Limit: ${bbox.west}</div>
+                <div class="bbox-item east">East Limit: ${bbox.east}</div>
+                <div class="bbox-item south">South Limit: ${bbox.south}</div>
+                <div class="bbox-item north">North Limit: ${bbox.north}</div>
+              `;
+              document.getElementById('multi-bbox-list').innerHTML = bboxList;
+          } else {
+              console.warn('Bounding box not returned in response.');
+          }
+
+          if (data.error) {
+              alert(data.error);
+          } else {
+              document.getElementById('multi-map-container').innerHTML = data.map_html;
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+    }
+  </script>
+  </section>
+  <!--END of BBox MULTIPLE-->
+  <section id="excel-qa">
+    <h2>Excel QA Report Generator</h2>
+    <form id="excelForm" enctype="multipart/form-data">
+      <input type="file" name="excel_file" required />
+      <button type="submit">Generate Report</button>
+    </form>
+    <br />
+    <div id="report"></div>
+  </section>
+
+  <script>
+    document.getElementById("excelForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch("/Excel_reporting", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => displayReport(data))
+      .catch(error => {
+        document.getElementById("report").innerHTML = "Error generating report.";
+        console.error(error);
+      });
+    });
+
+    function displayReport(reportData) {
+      const container = document.getElementById("report");
+      container.innerHTML = "";
+
+      reportData.forEach(section => {
+        const sectionTitle = document.createElement("h3");
+        sectionTitle.textContent = section.section;
+        container.appendChild(sectionTitle);
+
+        const table = document.createElement("table");
+        const tbody = document.createElement("tbody");
+
+        for (const [key, value] of Object.entries(section.details)) {
+          const row = document.createElement("tr");
+          const cellKey = document.createElement("th");
+          const cellVal = document.createElement("td");
+
+          cellKey.textContent = key;
+          cellVal.innerHTML = Array.isArray(value) ? value.join(", ") : value;
+
+          row.appendChild(cellKey);
+          row.appendChild(cellVal);
+          tbody.appendChild(row);
+        }
+
+        table.appendChild(tbody);
+        container.appendChild(table);
+      });
+    }
+  </script>
+  </section>
+  <!--END-->
+  <section id="leave-calc">
+  <h2>Scientific Calculator</h2>
+  <form id="calcForm">
+    <input type="text" id="expression" placeholder="Enter expression, e.g., sin(90)+log(100)" required />
+    <button type="submit">Calculate</button>
+  </form>
+  <p id="calcResult"></p>
+</section>
+
+<script>
+  document.getElementById("calcForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const expr = document.getElementById("expression").value;
+
+    fetch("/calculate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ expression: expr })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const resultElem = document.getElementById("calcResult");
+      if (data.result !== undefined) {
+        resultElem.textContent = `Result: ${data.result}`;
+      } else {
+        resultElem.textContent = data.error || "An error occurred";
+      }
+    });
+  });
+</script>
+
+<!--END fo Tools-->
+<!-- DATA MANAGEMENT SECTIONS -->
+
+<section id="dm-planning">
+  <h2>📝 Data Management Planning</h2>
+  <p>
+    A Data Management Plan (DMP) should include: data types, metadata standards, storage & backup procedures, data sharing policies, privacy & ethics considerations, and long-term preservation strategy.
+  </p>
+  <ul>
+    <li>Types of data to be collected or created</li>
+    <li>Standards and metadata to be used</li>
+    <li>Policies for access and sharing</li>
+    <li>Plans for archiving and preservation</li>
+    <li>Data security and ethical/legal compliance</li>
+  </ul>
+</section>
+
+<section id="dm-quality">
+  <h2>📊 Data Quality Checking</h2>
+  <p>Use this checklist to ensure your data quality:</p>
+  <ul>
+    <li>Is the data in machine-readable format (CSV, JSON, etc.)?</li>
+    <li>Are there missing or null values?</li>
+    <li>Is data type consistent across columns?</li>
+    <li>Are date/time fields properly formatted?</li>
+    <li>Do categorical fields contain only allowed values?</li>
+    <li>Any duplicates present?</li>
+  </ul>
+</section>
+
+<section id="dm-metadata">
+  <h2>🏷️ Metadata Guidance</h2>
+  <form id="metadataForm">
+    <label>What is the dataset? for example "Cehmical concentrations","Crustal Thickness Estimates"</label><br>
+    <input type="text" id="metaWhat"><br>
+    <label>From where is it taken? for example "stream sediments", "Seismic Refraction Profiles"</label><br>
+    <input type="text" id="metaSource"><br>
+    <label>What location was it captured? for example "Australia", "Central Asia"</label><br>
+    <input type="text" id="metaWhere"><br>
+    <label>What is the temporal extent? "2024-2025", "2024"</label><br>
+    <input type="text" id="metaWhen"><br>
+    <br>
+    <button type="button" onclick="generateMetadataTitle()">Generate Metadata Title</button>
+  </form>
+  <h3 id="metaTitle" style="margin-top:20px; color:green;"></h3>
+  <h3 id="meta2Title" style="margin-top:20px; color:green;"></h3>
+</section>
+
+<section id="dm-practices">
+  <h2>🌟 Best Practices in Data Management</h2>
+  <ul>
+    <li>Use consistent naming conventions and folder structures</li>
+    <li>Always document metadata alongside datasets</li>
+    <li>Automate backups and version control (e.g., Git, DVC)</li>
+    <li>Encrypt sensitive data</li>
+    <li>Validate data formats and structure regularly</li>
+    <li>Ensure compliance with data policies and licenses</li>
+  </ul>
+</section>
+
+<!--End of Data management-->
+
+  <section id="my-cv">
+    <h2>My CV</h2>
+    <p>[Professional CV template will appear here.]</p>
+  </section>
+  <section id="cv-form">
+    <h2>CV Form</h2>
+    <form>
+      <input type="text" placeholder="Full Name" required />
+      <input type="email" placeholder="Email" required />
+      <textarea placeholder="Professional Summary"></textarea>
+      <button type="submit">Generate CV</button>
+    </form>
+  </section>
+</div>
+
+  <footer class="footer">
+    <p>Contact: chuk.umunna@email.com | 
+       <a href="https://linkedin.com/in/chuk-umunna" style="color: #88d;">LinkedIn</a></p>
+  </footer>
+
+
+
+<script>
+  const secondaryMenu = {
+  tools: [
+    { id: 'folder-reporting', label: '📁 Folder Reporting' },
+    { id: 'text-counter', label: '🔤 Text Counter' },
+    { id: 'json-csv', label: '🔄 JSON to CSV' },
+    { id: 'path-generator', label: '🧭 Paths Generator' },
+    { id: 'batch-copy', label: '📄 Batch Copy' },
+    { id: 'bbox-single', label: '📌 BBox (Single)' },
+    { id: 'bbox-multi', label: '📍 BBox (Multiple)' },
+    { id: 'excel-qa', label: '📊 Excel QA' },
+    { id: 'leave-calc', label: '🗓️ Leave Calculator' }
+  ],
+  data: [
+    { id: 'dm-planning', label: '📝 DMP Planning' },
+    { id: 'dm-quality', label: '📊 Quality Check' },
+    { id: 'dm-metadata', label: '🏷️ Metadata' },
+    { id: 'dm-practices', label: '🌟 Best Practices' }
+  ],
+  about: [
+    { id: 'my-cv', label: '📄 My CV' },
+    { id: 'cv-form', label: '📝 CV Form' }
+  ]
+};
+
+
+  function switchPrimary(group) {
+    const secondaryLinks = document.getElementById("secondaryLinks");
+    secondaryLinks.innerHTML = "";
+
+    if (secondaryMenu[group]) {
+      secondaryMenu[group].forEach(item => {
+        const btn = document.createElement("button");
+        btn.textContent = item.label;
+        btn.onclick = () => showSection(item.id);
+        secondaryLinks.appendChild(btn);
+      });
+      if (secondaryMenu[group][0]) {
+        showSection(secondaryMenu[group][0].id);
+      }
+    } else if (group === "home") {
+      showSection("home");
+      secondaryLinks.innerHTML = "";
+    }
+  }
+
+  function showSection(id) {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme");
+    document.documentElement.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    switchPrimary("home");
+  });
+</script>
+<script>
+  const sidebar = document.getElementById("secondarySidebar");
+  const secondaryLinks = document.getElementById("secondaryLinks");
+
+  function revealSidebar(group) {
+    // Clear previous
+    secondaryLinks.innerHTML = "";
+
+    // Add new submenu
+    if (secondaryMenu[group]) {
+      secondaryMenu[group].forEach(item => {
+        const btn = document.createElement("button");
+        btn.textContent = item.label;
+        btn.onclick = () => showSection(item.id);
+        secondaryLinks.appendChild(btn);
+      });
+    }
+
+    // Show the sidebar
+    sidebar.style.display = "block";
+  }
+
+  // Hide sidebar when mouse leaves both tool and sidebar areas
+  document.addEventListener("DOMContentLoaded", () => {
+    const toolsBtn = document.getElementById("toolsBtn");
+    const aboutBtn = document.getElementById("aboutBtn");
+
+    [toolsBtn, aboutBtn, sidebar].forEach(el => {
+      el.addEventListener("mouseleave", () => {
+        setTimeout(() => {
+          if (!sidebar.matches(':hover') && !toolsBtn.matches(':hover') && !aboutBtn.matches(':hover')) {
+            sidebar.style.display = "none";
+          }
+        }, 300);
+      });
+    });
+  });
+</script>
+<script>
+function generateMetadataTitle() {
+  const what = document.getElementById("metaWhat").value;
+  const source = document.getElementById("metaSource").value;
+  const where = document.getElementById("metaWhere").value;
+  const when = document.getElementById("metaWhen").value;
+
+  const title = `${what} data from ${source} in ${where} (${when}).`;
+  document.getElementById("metaTitle").innerText = title;
+
+  const title2 = `${what} data from ${source}, ${where} (${when}).`;
+  document.getElementById("meta2Title").innerText = title2;
+}
+</script>
+
+
+
+</body>
+</html>
