@@ -10,9 +10,10 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/api/index.html"
+      "dest": "/api/static"
     }
   ]
 }
+
 
 
