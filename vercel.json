@@ -3,7 +3,7 @@
   "public": true,
   "builds": [
     {
-      "src": "api/**",
+      "src": "api/index.html",
       "use": "@vercel/static"
     }
   ],
@@ -14,3 +14,4 @@
     }
   ]
 }
+
