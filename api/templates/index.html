@@ -2,93 +2,278 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chukspace Dashboard</title>
+    <title>
+        <link rel="icon" href="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace_Icon.png?raw=true" type="image/png">
+    </title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         header {
-            background-color: #2c3e50;
-            color: white;
-            height: 70px;              /* Ensure exact height */
-            padding: 0 1rem;
+            background-color: #ffffffff;
+            height: 80px;
             display: flex;
-            align-items: center;       /* Vertically center text */
-            font-size: 1.5rem;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .container {
-            display: flex;
-            height: calc(100vh - 70px);
+        header img {
+            width: 150px;
         }
-        
         nav {
-            width: 220px;
             background-color: #34495e;
-            color: white;
-            padding-top: 1rem;
-            position: fixed;
-            top: 70px;                /* Adjust to match header height */
-            bottom: 0;
-            left: 0;
-            overflow-y: auto;
+            display: flex;
+            justify-content: center;
         }
-
-
         nav a {
-            display: block;
+            display: inline-block;
             color: white;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.5rem;
             text-decoration: none;
+            transition: background-color 0.2s;
         }
-
         nav a:hover {
             background-color: #1abc9c;
         }
-
-        main {
-            margin-left: 220px;
-            width: calc(100% - 220px);
-            height: 100%;
+        nav a.active {
+            background-color: #1abc9c;
+            font-weight: bold;
         }
-
-        iframe {
-            border: none;
+        main {
+            padding: 1rem;
+        }
+        .card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        .highlight {
+            background: #ecf0f1;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        .app-tile {
+            background-color: #1abc9c;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+        .app-tile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 80%;
+            height: 80%;
+            position: relative;
+        }
+        .modal iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
     <header>
-        🕊️ Chukspace – Stewardship Dashboard
+        <img src="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Logo.png?raw=true" alt="Chukspace Logo">
     </header>
 
-    <div class="container">
-        <nav>
-            <a href="#" onclick="loadApp('https://www.chukspace.fyi/')">AGT CRM</a>
-            <a href="#" onclick="loadApp('https://your-church-b-app.vercel.app')">Church B CRM</a>
-            <a href="#" onclick="loadApp('https://www.dropbox.com/scl/fi/c6o0f9p3cf0bm0vg23t6c/Chukedia-Policy-statement.pdf?rlkey=32c3el7r6iiq6g2gfzkwga2k1&raw=1')">Policy Statement</a>
-            <a href="#" onclick="loadApp('https://www.dropbox.com/s/your-service-plan-link?raw=1')">Service Plan</a>
-            <a href="#" onclick="loadApp('https://www.dropbox.com/s/your-about-page-link.html?raw=1')">About</a>
-        </nav>
+    <nav>
+        <a href="#" id="nav-dashboard" onclick="setActive(this); showDashboard()">Dashboard</a>
+        <a href="#" id="nav-about" onclick="setActive(this); loadAbout()">About</a>
+        <a href="#" id="nav-policy" onclick="setActive(this); loadPolicy()">Policy Statements</a>
+        <a href="#" id="nav-service" onclick="setActive(this); loadServicePlan()">Service Plan</a>
+    </nav>
 
-        <main>
-            <iframe id="app-frame" src="https://www.dropbox.com/s/your-about-page-link.html?raw=1" title="App Frame"></iframe>
-        </main>
+    <main id="main-content"></main>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">X</button>
+            <iframe id="modal-iframe" src=""></iframe>
+        </div>
     </div>
 
     <script>
-        function loadApp(url) {
-            document.getElementById('app-frame').src = url;
+        function setActive(element) {
+            document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
+            element.classList.add('active');
         }
+
+        function showDashboard() {
+            document.getElementById('main-content').innerHTML = `
+                <section style="max-width: 900px; margin: auto;">
+                    <h1 style="text-align: center; color: #1abc9c; margin-bottom: 2rem;">Dashboard</h1>
+                    <div class="app-grid">
+                        <div class="app-tile" onclick="openModal('https://www.chukspace.fyi/')">AGT CRM</div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church B CRM</div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function loadAbout() {
+            document.getElementById('main-content').innerHTML = `
+                <section style="max-width: 900px; margin: auto; line-height: 1.6; color: #2c3e50;">
+                    <h1 style="text-align: center; color: #1abc9c; font-size: 2.5rem; margin-bottom: 1rem;">
+                        About Chukspace
+                    </h1>
+                    <p style="font-size: 1.1rem; text-align: center; margin-bottom: 2rem;">
+                        Ethical Data Stewardship for Faith-Based Impact
+                    </p>
+                    <div class="card highlight">
+                        <h2>Our Mission</h2>
+                        <p>Chukspace is a non-profit service dedicated to providing secure, ethical, and GDPR-compliant data stewardship for churches and faith-based organisations. We combine deep respect for church values with technical expertise, ensuring your data is managed with transparency, integrity, and care.</p>
+                    </div>
+                    <div class="card">
+                        <h2>What We Offer</h2>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>✅ <strong>Secure Cloud Hosting</strong> – GDPR-compliant infrastructure with backups and access control.</li>
+                            <li>✅ <strong>Church CRM</strong> – Tools for attendance, communications, volunteer management, and more.</li>
+                            <li>✅ <strong>Data Governance Support</strong> – Audits, policy design, and retention planning.</li>
+                            <li>✅ <strong>GDPR Compliance</strong> – Privacy audits, consent management, and policy templates.</li>
+                        </ul>
+                    </div>
+                    <div class="card highlight">
+                        <h2>Who We Serve</h2>
+                        <p>Our services are designed for UK-based churches, dioceses, and faith-based organisations seeking practical and ethical solutions to their data management challenges. We understand the unique needs of faith communities and tailor our solutions accordingly.</p>
+                    </div>
+                    <div class="card">
+                        <h2>Why Choose Us?</h2>
+                        <p>Unlike generic IT services, we blend technical skill with an understanding of church culture and values. We are committed to safeguarding your data as a vital part of your ministry, enabling your mission to thrive in a digital world.</p>
+                    </div>
+                </section>
+            `;
+        }
+
+        function loadPolicy() {
+            document.getElementById('main-content').innerHTML = `
+                <section style="max-width: 900px; margin: auto; line-height: 1.6; color: #2c3e50;">
+                    <h1 style="text-align: center; color: #1abc9c; font-size: 2.5rem; margin-bottom: 1rem;">
+                        Policy Statements
+                    </h1>
+                    <p style="font-size: 1.1rem; text-align: center; margin-bottom: 2rem;">
+                        Our policies reflect our commitment to ethical data stewardship and full compliance with UK GDPR.
+                    </p>
+
+                    <div class="card highlight">
+                        <h2>Audit Ready Policy</h2>
+                        <p>Outlines our dedication to lawful, fair, and transparent processing of personal data, embedding data protection principles into all systems and operations. Covers responsibilities for DPO, Data Steward, Onboarding Lead, and Marketing Lead.</p>
+                        <a href="#" onclick="openModal('https://www.dropbox.com/scl/fi/your-policy-pdf-link?raw=1')" style="color: #1abc9c;">View Full Policy</a> |
+                        <a href="https://www.dropbox.com/scl/fi/your-policy-pdf-link?dl=1" target="_blank" style="color: #1abc9c;">Download</a>
+                    </div>
+
+                    <div class="card">
+                        <h2>Staff Policy</h2>
+                        <p>Defines how staff, contractors, and volunteers must handle data: collecting only what’s needed, keeping it accurate and secure, and following all authorisation protocols.</p>
+                        <a href="#" onclick="openModal('https://www.dropbox.com/scl/fi/your-staff-policy-link?raw=1')" style="color: #1abc9c;">View Full Policy</a> |
+                        <a href="https://www.dropbox.com/scl/fi/your-staff-policy-link?dl=1" target="_blank" style="color: #1abc9c;">Download</a>
+                    </div>
+
+                    <div class="card highlight">
+                        <h2>Privacy Notice (Summary)</h2>
+                        <p>Short version of our privacy commitments: we only collect necessary data, use it responsibly, and keep it secure. You have full control over your personal data.</p>
+                        <a href="#" onclick="openModal('https://www.dropbox.com/scl/fi/your-privacy-notice-link?raw=1')" style="color: #1abc9c;">View Full Privacy Policy</a> |
+                        <a href="https://www.dropbox.com/scl/fi/your-privacy-notice-link?dl=1" target="_blank" style="color: #1abc9c;">Download</a>
+                    </div>
+
+                    <div class="card">
+                        <h2>Cookie Policy</h2>
+                        <p>Explains how we use essential, analytics, preference, and marketing cookies, and how you can manage your preferences.</p>
+                        <a href="#" onclick="openModal('https://www.dropbox.com/scl/fi/your-cookie-policy-link?raw=1')" style="color: #1abc9c;">View Full Cookie Policy</a> |
+                        <a href="https://www.dropbox.com/scl/fi/your-cookie-policy-link?dl=1" target="_blank" style="color: #1abc9c;">Download</a>
+                    </div>
+                </section>
+            `;
+        }
+
+        function loadServicePlan() {
+            document.getElementById('main-content').innerHTML = `
+                <section style="max-width: 900px; margin: auto; line-height: 1.6; color: #2c3e50;">
+                    <h1 style="text-align: center; color: #1abc9c; font-size: 2.5rem; margin-bottom: 1rem;">
+                        Chukspace Service Plan
+                    </h1>
+                    <div class="card highlight">
+                        <h2>Executive Summary</h2>
+                        <p>Chukspace addresses the growing need for secure, ethical, and GDPR-compliant data management in churches and faith-based organisations. We offer a unique combination of technical expertise and faith-aligned values to protect and empower ministries.</p>
+                    </div>
+                    <div class="card">
+                        <h2>Our Services</h2>
+                        <ul>
+                            <li>Secure Cloud-Based Data Infrastructure with backups and role-based access</li>
+                            <li>Custom Church CRM for attendance, communications, and volunteer management</li>
+                            <li>Data Stewardship & Governance, including audits and policy design</li>
+                            <li>GDPR Compliance Support and training</li>
+                        </ul>
+                    </div>
+                    <div class="card highlight">
+                        <h2>Who We Serve</h2>
+                        <p>We work with UK churches, dioceses, and faith-based charities of all sizes, tailoring our services to meet their specific data protection and operational needs.</p>
+                    </div>
+                    <div class="card">
+                        <h2>Competitive Advantage</h2>
+                        <p>We blend technical expertise with a deep understanding of church culture, providing ethical data solutions that generic IT providers can’t match.</p>
+                    </div>
+                    <div class="card highlight">
+                        <h2>Technology</h2>
+                        <p>Our platform is built with a secure AWS-hosted PostgreSQL backend, end-to-end encryption, audit logs, and two-factor authentication.</p>
+                    </div>
+                </section>
+            `;
+        }
+
+        function openModal(url) {
+            document.getElementById('modal').style.display = 'block';
+            document.getElementById('modal-iframe').src = url;
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('modal-iframe').src = '';
+        }
+
+        // Load dashboard and set it active on page load
+        window.onload = function() {
+            showDashboard();
+            setActive(document.getElementById('nav-dashboard'));
+        };
     </script>
 </body>
 </html>
-
