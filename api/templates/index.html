@@ -151,7 +151,24 @@
   
   <script>
     const pages = {
-      dashboard: `...DASHBOARD CONTENT FROM ORIGINAL HTML WITH LINKS...`,
+      dashboard: `function showDashboard() {
+            document.getElementById('main-content').innerHTML = `
+                <section style="max-width: 900px; margin: auto;">
+                    <h1 style="text-align: center; color: #1abc9c; margin-bottom: 2rem;">Dashboard</h1>
+                    <div class="app-grid">
+                        <div class="app-tile" onclick="openModal('https://www.chukspace.fyi/')">AGT Sheffield</div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 2 </div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 3 </div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 4 </div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 5 </div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 6 </div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 7 </div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 8 </div>
+                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 9 </div>
+                    </div>
+                </section>
+            `;
+        }`,
       about: `...ABOUT CONTENT FROM ORIGINAL HTML...`,
       policy: `...POLICY CONTENT FROM ORIGINAL HTML...`,
       service: `...SERVICE PLAN CONTENT FROM ORIGINAL HTML...`,
@@ -187,3 +204,4 @@
   </script>
 </body>
 </html>
+
