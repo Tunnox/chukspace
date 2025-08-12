@@ -1,305 +1,418 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Chukspace</title>
-        <link rel="icon" sizes="1000x1000" type="image/x-icon" href="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Icon_new.png?raw=true">
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        header {
-            background-color: #ffffffff;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        header img {
-            width: 150px;
-        }
-        h3 {
-            #01325a
-        }
-        nav {
-            background-color: #34495e;
-            display: flex;
-            justify-content: center;
-        }
-        nav a {
-            display: inline-block;
-            color: white;
-            padding: 1rem 1.5rem;
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-        nav a:hover {
-            background-color: #1abc9c;
-        }
-        nav a.active {
-            background-color: #1abc9c;
-            font-weight: bold;
-        }
-        main {
-            padding: 1rem;
-        }
-        .card {
-            background: #ffffff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-        .highlight {
-            background: #ecf0f1;
-        }
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1rem;
-        }
-        .app-tile {
-            background-color: #1abc9c;
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: transform 0.2s ease;
-        }
-        .app-tile:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7);
-        }
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 0;
-            border-radius: 8px;
-            width: 80%;
-            height: 80%;
-            position: relative;
-        }
-        .modal iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: red;
-            color: white;
-            border: none;
-            padding: 0.5rem;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chukspace — Data Steward Dashboard</title>
+  <link rel="icon" href="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Icon_new.png?raw=true">
+  <style>
+    :root{
+      --accent: #1abc9c;
+      --nav: #2f3b49;
+      --muted:#6b7b86;
+      --card:#ffffff;
+      --glass: rgba(255,255,255,0.85);
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(15,23,42,0.08);
+      --glass-shadow: 0 6px 18px rgba(10,12,20,0.06);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#f6f8fa 0%, #eef3f6 100%);color:#172023}
+    header{height:86px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:transparent}
+    .brand{display:flex;align-items:center;gap:14px}
+    .brand img{height:56px}
+    .brand h1{font-size:20px;margin:0;color:var(--nav)}
+
+    /* NAV */
+    nav{background:var(--nav);color:white;border-radius:14px;padding:8px 12px;margin:0 20px;display:flex;align-items:center;gap:12px}
+    .nav-item{position:relative}
+    .nav-link{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;color:white;text-decoration:none;font-weight:600;cursor:pointer}
+    .nav-link:hover{background:rgba(255,255,255,0.06)}
+    .nav-link.active{background:var(--accent);box-shadow:0 6px 18px rgba(26,188,156,0.16)}
+    .dropdown{position:absolute;top:48px;left:0;background:white;color:#233138;border-radius:10px;min-width:220px;padding:8px;border:1px solid rgba(20,30,40,0.06);box-shadow:var(--shadow);display:none}
+    .dropdown a{display:block;padding:10px;border-radius:8px;text-decoration:none;color:inherit;font-weight:600}
+    .dropdown a:hover{background:#f6fbfa}
+    .nav-item:hover .dropdown{display:block}
+
+    /* layout */
+    .container{max-width:1200px;margin:26px auto;padding:0 20px}
+    .hero{display:flex;gap:16px;align-items:center;margin-bottom:20px}
+    .search{flex:1;background:var(--card);padding:12px;border-radius:12px;box-shadow:var(--glass-shadow);display:flex;gap:12px;align-items:center}
+    .search input{border:none;outline:none;font-size:16px;background:transparent;flex:1}
+    .quick-actions{display:flex;gap:8px}
+    .btn{background:var(--accent);color:white;padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.08)}
+
+    /* cards & grid */
+    .card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+    .app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+    .app-tile{background:linear-gradient(180deg,var(--accent),#14b594);color:white;padding:20px;border-radius:12px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease}
+    .app-tile:hover{transform:translateY(-6px);box-shadow:0 14px 30px rgba(20,40,38,0.12)}
+    .app-title{font-weight:800}
+    .app-sub{font-size:13px;opacity:0.95}
+
+    /* split modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(2,6,23,0.5),rgba(2,6,23,0.65));z-index:400}
+    .modal.open{display:flex}
+    .modal-panel{width:94%;height:92%;background:var(--glass);border-radius:12px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 30px 80px rgba(2,6,23,0.6);backdrop-filter: blur(6px)}
+    .modal-header{position:absolute;top:18px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.06);padding:6px 10px;border-radius:999px;color:white;font-weight:700}
+    .modal-left,.modal-right{position:relative}
+    .panel-toolbar{display:flex;gap:8px;align-items:center;padding:10px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(2,6,23,0.06)}
+    .panel-toolbar button{border-radius:8px;padding:8px 10px;border:none;background:transparent;color:#fff;font-weight:700;cursor:pointer}
+    .iframe-wrap{height:calc(100% - 56px)}
+    iframe{width:100%;height:100%;border:0}
+    .close-x{position:absolute;right:12px;top:12px;background:rgba(0,0,0,0.6);color:white;border:none;padding:8px;border-radius:8px;cursor:pointer}
+
+    /* responsive */
+    @media (max-width:900px){
+      .cards{grid-template-columns:repeat(1,1fr)}
+      .modal-panel{grid-template-columns:1fr; height:96%;width:98%}
+      .hero{flex-direction:column;align-items:stretch}
+      .brand h1{display:none}
+    }
+
+    /* animations for content switching */
+    .fade-in{animation:fadeIn .28s ease both}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    /* small form */
+    form .row{display:flex;gap:8px}
+    input,textarea,select{padding:10px;border-radius:8px;border:1px solid rgba(16,24,32,0.06);font-size:14px}
+
+    footer{max-width:1200px;margin:24px auto;padding:16px;color:var(--muted);display:flex;justify-content:space-between}
+  </style>
 </head>
 <body>
-    <header style="text-align: center;">
-    <img src="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Logo.png?raw=true" alt="Chukspace Logo">
-</header>
-
-
-    <nav>
-        <a href="#" id="nav-dashboard" onclick="setActive(this); showDashboard()">Dashboard</a>
-        <a href="#" id="nav-about" onclick="setActive(this); loadAbout()">About</a>
-        <a href="#" id="nav-policy" onclick="setActive(this); loadPolicy()">Policy Statements</a>
-        <a href="#" id="nav-service" onclick="setActive(this); loadServicePlan()">Service Plan</a>
-    </nav>
-
-    <main id="main-content"></main>
-
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal()">X</button>
-            <iframe id="modal-iframe" src=""></iframe>
-        </div>
+  <header>
+    <div class="brand">
+      <img src="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Logo.png?raw=true" alt="Chukspace">
+      <h1>Chukspace</h1>
     </div>
 
-    <script>
-        function setActive(element) {
-            document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
-            element.classList.add('active');
+    <nav aria-label="Main navigation">
+      <div class="nav-item"><a class="nav-link active" id="nav-dashboard" role="button" onclick="navigate('dashboard', this)">Dashboard</a></div>
+      <div class="nav-item"><a class="nav-link" id="nav-analytics" onclick="navigate('analytics', this)">Data Analytics</a></div>
+      <div class="nav-item"><a class="nav-link" id="nav-resources" onclick="navigate('resources', this)">Resources</a></div>
+      <div class="nav-item">
+        <a class="nav-link" id="nav-policies" aria-haspopup="true" aria-expanded="false">Policies & Governance ▾</a>
+        <div class="dropdown" role="menu" aria-label="Policies dropdown">
+          <a role="menuitem" onclick="navigate('policies')">Policies</a>
+          <a role="menuitem" onclick="navigate('service-plan')">Service Plans</a>
+        </div>
+      </div>
+      <div class="nav-item"><a class="nav-link" id="nav-contact" onclick="navigate('contact', this)">Contact</a></div>
+    </nav>
+  </header>
+
+  <main class="container" id="main">
+    <section class="hero fade-in">
+      <div class="search card">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:0.8"><path d="M21 21l-4.35-4.35" stroke="#223" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <input id="global-search" placeholder="Search apps, policies or commands..." oninput="filterApps(this.value)">
+        <div class="quick-actions">
+          <button class="btn" onclick="createApp()">+ New App</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="content-area">
+      <!-- dynamic content will be injected here -->
+    </section>
+  </main>
+
+  <!-- Split Modal -->
+  <div id="app-modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-panel" role="document">
+      <button class="close-x" title="Close" onclick="closeModal()">✕</button>
+      <div class="modal-left">
+        <div class="panel-toolbar">
+          <strong style="color:white">Repository</strong>
+          <div style="flex:1"></div>
+          <button onclick="openInNew('left')">Open in new tab</button>
+        </div>
+        <div class="iframe-wrap"><iframe id="modal-iframe-left" src="about:blank" title="Repository viewer"></iframe></div>
+      </div>
+      <div class="modal-right">
+        <div class="panel-toolbar">
+          <strong style="color:white">Live App / Link</strong>
+          <div style="flex:1"></div>
+          <button onclick="openInNew('right')">Open in new tab</button>
+        </div>
+        <div class="iframe-wrap"><iframe id="modal-iframe-right" src="about:blank" title="Live app viewer"></iframe></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>© Chukspace</div>
+    <div style="opacity:0.8">Built for data stewardship • GDPR-ready</div>
+  </footer>
+
+  <script>
+    // --- App data (example) ---
+    const apps = [
+      { id: 'agt-sheffield', title: 'AGT Sheffield', desc: 'Church management', repo: 'https://github.com/Tunnox/agt-sheffield', live: 'https://www.chukspace.fyi/' },
+      { id: 'church-2', title: 'Church 2', desc: 'Volunteer portal', repo: 'https://github.com/example/church-2', live: 'https://your-church-b-app.vercel.app' },
+      { id: 'church-3', title: 'Church 3', desc: 'Events & bookings', repo: 'https://github.com/example/church-3', live: 'https://your-church-c-app.vercel.app' },
+      { id: 'church-4', title: 'Church 4', desc: 'Small groups', repo: 'https://github.com/example/church-4', live: 'https://your-church-d-app.vercel.app' },
+      // add as many as you like
+    ];
+
+    // --- Navigation control ---
+    function navigate(page, el){
+      // update active nav link
+      document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
+      if(el){ el.classList.add('active'); }
+
+      const area = document.getElementById('content-area');
+      area.innerHTML = '';
+
+      if(page === 'dashboard') loadDashboard();
+      else if(page === 'policies') loadPolicies();
+      else if(page === 'service-plan') loadServicePlan();
+      else if(page === 'analytics') loadAnalytics();
+      else if(page === 'resources') loadResources();
+      else if(page === 'contact') loadContact();
+    }
+
+    // --- Dashboard ---
+    function loadDashboard(){
+      const area = document.getElementById('content-area');
+      area.innerHTML = `
+        <section class="cards fade-in">
+          <div class="card">
+            <h3 style="margin-top:0">Overview</h3>
+            <p style="color:var(--muted)">Active apps: ${apps.length} • Policies: 4 • Users: 12</p>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <button class="btn" onclick="navigate('analytics', document.getElementById('nav-analytics'))">Open Analytics</button>
+              <button class="btn" onclick="navigate('policies', document.getElementById('nav-policies'))">Policies</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0">Recent Activity</h3>
+            <ul style="margin:0;padding-left:16px;color:var(--muted)">
+              <li>Backup completed — Aug 10, 2025</li>
+              <li>Policy updated — Jul 12, 2025</li>
+              <li>AGT Sheffield deployed — Jun 03, 2025</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0">Shortcuts</h3>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+              <button class="btn" onclick="createApp()">Create App</button>
+              <button class="btn ghost" onclick="openModalWith(apps[0])">Open AGT Sheffield</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card fade-in" style="margin-bottom:18px">
+          <h3 style="margin-top:0">Applications</h3>
+          <p style="color:var(--muted)">Click any tile to open a split modal with the repository on the left and the live app on the right.</p>
+          <div class="app-grid" id="app-grid">
+          </div>
+        </section>
+      `;
+
+      const grid = document.getElementById('app-grid');
+      apps.forEach(app => {
+        const el = document.createElement('div');
+        el.className = 'app-tile';
+        el.tabIndex = 0;
+        el.setAttribute('role','button');
+        el.innerHTML = `<div class="app-title">${app.title}</div><div class="app-sub">${app.desc}</div><small style="opacity:0.95;margin-top:auto">${app.repo}</small>`;
+        el.onclick = () => openModalWith(app);
+        el.onkeydown = (e) => { if(e.key === 'Enter') openModalWith(app) };
+        grid.appendChild(el);
+      });
+    }
+
+    // --- Modal behavior ---
+    function openModalWith(app){
+      const modal = document.getElementById('app-modal');
+      const left = document.getElementById('modal-iframe-left');
+      const right = document.getElementById('modal-iframe-right');
+
+      // prefer raw GitHub URLs to tree/master if needed
+      left.src = normalizeGithub(app.repo);
+      right.src = app.live;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+
+      // focus trap simple
+      setTimeout(()=>document.querySelector('.close-x').focus(),80);
+    }
+
+    function normalizeGithub(url){
+      if(!url) return 'about:blank';
+      try{
+        const u = new URL(url);
+        // if it's a github repo root, show the repo page; allow embedding by using https://github.dev/owner/repo
+        if(u.hostname.includes('github.com')){
+          const parts = u.pathname.split('/').filter(Boolean);
+          if(parts.length >= 2){
+            return `https://github.dev/${parts[0]}/${parts[1]}`; // github.dev provides a lighter web UI embeddable
+          }
         }
+        return url;
+      }catch(e){ return url }
+    }
 
-        function showDashboard() {
-            document.getElementById('main-content').innerHTML = `
-                <section style="max-width: 900px; margin: auto;">
-                    <h1 style="text-align: center; color: #1abc9c; margin-bottom: 2rem;">Dashboard</h1>
-                    <div class="app-grid">
-                        <div class="app-tile" onclick="openModal('https://www.chukspace.fyi/')">AGT Sheffield</div>
-                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 2 </div>
-                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 3 </div>
-                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 4 </div>
-                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 5 </div>
-                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 6 </div>
-                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 7 </div>
-                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 8 </div>
-                        <div class="app-tile" onclick="openModal('https://your-church-b-app.vercel.app')">Church 9 </div>
-                    </div>
-                </section>
-            `;
-        }
+    function closeModal(){
+      const modal = document.getElementById('app-modal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      document.getElementById('modal-iframe-left').src = 'about:blank';
+      document.getElementById('modal-iframe-right').src = 'about:blank';
+    }
 
-        function loadAbout() {
-            document.getElementById('main-content').innerHTML = `
-                <section style="max-width: 900px; margin: auto; line-height: 1.6; color: #2c3e50;">
-                    <h1 style="text-align: center; color: #1abc9c; font-size: 2.5rem; margin-bottom: 1rem;">
-                        About Chukspace
-                    </h1>
-                    <p style="font-size: 1.1rem; text-align: center; margin-bottom: 2rem;">
-                        Ethical Data Stewardship for Faith-Based Impact
-                    </p>
-                    <div class="card highlight">
-                        <h2>Our Mission</h2>
-                        <p>Chukspace is a non-profit service dedicated to providing secure, ethical, and GDPR-compliant data stewardship for churches and faith-based organisations. We combine deep respect for church values with technical expertise, ensuring your data is managed with transparency, integrity, and care.</p>
-                    </div>
-                    <div class="card">
-                        <h2>What We Offer</h2>
-                        <ul style="list-style: none; padding-left: 0;">
-                            <li><strong>Secure Cloud Hosting</strong> – GDPR-compliant infrastructure with backups and access control.</li>
-                            <li><strong>Data Quality Assurance</strong> - Data verification and validation, quality control, and Metadata standards</li>
-                            <li><strong>Church CRM</strong> – Tools for attendance, communications, volunteer management, and more.</li>
-                            <li><strong>Data Governance Support</strong> – Audits, policy design, and retention planning.</li>
-                            <li><strong>Compliance and policy oversight</strong> - Ensure data handling complies with relevant standards (FAIR principles, GDPR, organisational policies) and Monitor data access permissions and licensing.</li>
-                            <li><strong>GDPR Compliance</strong> – Privacy audits, consent management, and policy templates.</li>
-                            <li><strong>Documentation and standardisation</strong> - </li> 
-                        </ul>
-                    </div>
-                    <div class="card highlight">
-                        <h2>Who We Serve</h2>
-                        <p>Our services are designed for UK-based churches, dioceses, and faith-based organisations seeking practical and ethical solutions to their data management challenges. We understand the unique needs of faith communities and tailor our solutions accordingly.</p>
-                    </div>
-                    <div class="card">
-                        <h2>Why Choose Us?</h2>
-                        <p>Unlike generic IT services, we blend technical skill with an understanding of church culture and values. We are committed to safeguarding your data as a vital part of your ministry, enabling your mission to thrive in a digital world.</p>
-                    </div>
-                </section>
-            `;
-        }
+    function openInNew(which){
+      const left = document.getElementById('modal-iframe-left').src;
+      const right = document.getElementById('modal-iframe-right').src;
+      if(which === 'left') window.open(left,'_blank');
+      else window.open(right,'_blank');
+    }
 
-        function loadPolicy() {
-            document.getElementById('main-content').innerHTML = `
-                <section style="max-width: 900px; margin: auto; line-height: 1.6; color: #2c3e50;">
-                    <h1 style="text-align: center; color: #1abc9c; font-size: 2.5rem; margin-bottom: 1rem;">
-                        Policy Statements
-                    </h1>
-                    <p style="font-size: 1.1rem; text-align: center; margin-bottom: 2rem;">
-                        Our policies reflect our commitment to ethical data stewardship and full compliance with UK GDPR.
-                    </p>
+    // keyboard
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape') closeModal();
+    });
 
-                    <div class="card highlight">
-                        <h2>Audit Ready Policy</h2>
-                        <p>Outlines our dedication to lawful, fair, and transparent processing of personal data, embedding data protection principles into all systems and operations. Covers responsibilities for DPO, Data Steward, Onboarding Lead, and Marketing Lead.</p>
-                        <a href="#" onclick="openModal('https://www.dropbox.com/scl/fi/your-policy-pdf-link?raw=1')" style="color: #1abc9c;">View Full Policy</a> |
-                        <a href="https://www.dropbox.com/scl/fi/your-policy-pdf-link?dl=1" target="_blank" style="color: #1abc9c;">Download</a>
-                    </div>
+    // --- Policies & Service Plan ---
+    function loadPolicies(){
+      const area = document.getElementById('content-area');
+      area.innerHTML = `
+        <section class="card fade-in">
+          <h2>Policies</h2>
+          <p style="color:var(--muted)">Manage policy documents and quick links.</p>
+          <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px">
+            <div class="card">
+              <h4>Audit Ready Policy</h4>
+              <p style="color:var(--muted)">Lawful, fair & transparent processing. Roles defined.</p>
+              <div style="margin-top:8px"><a onclick="openModalExternal('https://www.dropbox.com/scl/fi/your-policy-pdf-link?raw=1')">View</a> • <a href="#">Edit</a></div>
+            </div>
+            <div class="card">
+              <h4>Staff Policy</h4>
+              <p style="color:var(--muted)">Staff & volunteer data handling rules.</p>
+              <div style="margin-top:8px"><a onclick="openModalExternal('https://www.dropbox.com/scl/fi/bicvau9lr61kjzr7cadul/Staff-Data-Protection-Policy.pdf?raw=1')">View</a> • <a href="#">Edit</a></div>
+            </div>
+            <div class="card">
+              <h4>Privacy Notice</h4>
+              <p style="color:var(--muted)">Summary and full policy links.</p>
+              <div style="margin-top:8px"><a onclick="openModalExternal('https://www.dropbox.com/scl/fi/your-privacy-notice-link?raw=1')">View</a> • <a href="#">Edit</a></div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
 
-                    <div class="card">
-                        <h2>Staff Policy</h2>
-                        <p>Defines how staff, contractors, and volunteers must handle data: collecting only what’s needed, keeping it accurate and secure, and following all authorisation protocols.</p>
-                        <a href="#" onclick="openModal('https://www.dropbox.com/scl/fi/bicvau9lr61kjzr7cadul/Staff-Data-Protection-Policy.pdf?rlkey=budsslphrwhdxicc73qm9kcdv&st=goipay1c&dl=0')" style="color: #1abc9c;">View Full Policy</a> |
-                        <a href="https://www.dropbox.com/scl/fi/bicvau9lr61kjzr7cadul/Staff-Data-Protection-Policy.pdf?rlkey=budsslphrwhdxicc73qm9kcdv&st=7tgs7h9h&dl=0" target="_blank" style="color: #1abc9c;">Download</a>
-                    </div>
+    function loadServicePlan(){
+      const area = document.getElementById('content-area');
+      area.innerHTML = `
+        <section class="card fade-in">
+          <h2>Service Plans</h2>
+          <p style="color:var(--muted)">Edit and publish your service offers.</p>
+          <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px">
+            <div class="card">
+              <h4>Basic</h4>
+              <p>Secure hosting, backup, limited support.</p>
+              <div style="margin-top:8px"><a href="#">Edit</a> • <a href="#">Publish</a></div>
+            </div>
+            <div class="card">
+              <h4>Professional</h4>
+              <p>Advanced governance, training & priority support.</p>
+              <div style="margin-top:8px"><a href="#">Edit</a> • <a href="#">Publish</a></div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
 
-                    <div class="card highlight">
-                        <h2>Privacy Notice (Summary)</h2>
-                        <p>Short version of our privacy commitments: we only collect necessary data, use it responsibly, and keep it secure. You have full control over your personal data.</p>
-                        <a href="#" onclick="openModal('https://www.dropbox.com/scl/fi/your-privacy-notice-link?raw=1')" style="color: #1abc9c;">View Full Privacy Policy</a> |
-                        <a href="https://www.dropbox.com/scl/fi/your-privacy-notice-link?dl=1" target="_blank" style="color: #1abc9c;">Download</a>
-                    </div>
+    // --- Analytics placeholder ---
+    function loadAnalytics(){
+      const area = document.getElementById('content-area');
+      area.innerHTML = `
+        <section class="card fade-in">
+          <h2>Data Analytics</h2>
+          <p style="color:var(--muted)">Quick overview and reports. (Placeholder)</p>
+          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+            <div class="card" style="flex:1;min-width:260px">Charts & KPIs here</div>
+            <div class="card" style="flex:1;min-width:260px">Recent reports & exports</div>
+          </div>
+        </section>
+      `;
+    }
 
-                    <div class="card">
-                        <h2>Cookie Policy</h2>
-                        <p>Explains how we use essential, analytics, preference, and marketing cookies, and how you can manage your preferences.</p>
-                        <a href="#" onclick="openModal('https://www.dropbox.com/scl/fi/your-cookie-policy-link?raw=1')" style="color: #1abc9c;">View Full Cookie Policy</a> |
-                        <a href="https://www.dropbox.com/scl/fi/your-cookie-policy-link?dl=1" target="_blank" style="color: #1abc9c;">Download</a>
-                    </div>
-                </section>
-            `;
-        }
+    function loadResources(){
+      const area = document.getElementById('content-area');
+      area.innerHTML = `
+        <section class="card fade-in">
+          <h2>Resources</h2>
+          <p style="color:var(--muted)">Guides, templates, onboarding packs and FAQs.</p>
+          <ul>
+            <li><a href="#">Onboarding checklist</a></li>
+            <li><a href="#">GDPR playbook</a></li>
+            <li><a href="#">Data dictionary template</a></li>
+          </ul>
+        </section>
+      `;
+    }
 
-        function loadServicePlan() {
-            document.getElementById('main-content').innerHTML = `
-                <section style="max-width: 900px; margin: auto; line-height: 1.6; color: #2c3e50;">
-                    <h1 style="text-align: center; color: #1abc9c; font-size: 2.5rem; margin-bottom: 1rem;">
-                        Chukspace Service Plan
-                    </h1>
-                    <div class="card highlight">
-                        <h2>Executive Summary</h2>
-                        <p>Chukspace addresses the growing need for secure, ethical, and GDPR-compliant data management in churches and faith-based organisations. We offer a unique combination of technical expertise and faith-aligned values to protect and empower ministries.</p>
-                    </div>
-                    <div class="card">
-                        <h2>Our Services</h2>
-                        <ul>
-                            <li>Secure Cloud-Based Data Infrastructure with backups and role-based access</li>
-                            <li>Custom Church CRM for attendance, communications, and volunteer management</li>
-                            <li>Data Stewardship & Governance, including audits and policy design</li>
-                            <li>GDPR Compliance Support and training</li>
-                        </ul>
-                    </div>
-                    <div class="card highlight">
-                        <h2>Who We Serve</h2>
-                        <p>We work with UK churches, dioceses, and faith-based charities of all sizes, tailoring our services to meet their specific data protection and operational needs.</p>
-                    </div>
-                    <div class="card">
-                        <h2>Competitive Advantage</h2>
-                        <p>We blend technical expertise with a deep understanding of church culture, providing ethical data solutions that generic IT providers can’t match.</p>
-                    </div>
-                    <div class="card highlight">
-                        <h2>Technology</h2>
-                        <p>Our platform is built with a secure AWS-hosted PostgreSQL backend, end-to-end encryption, audit logs, and two-factor authentication.</p>
-                    </div>
-                </section>
-            `;
-        }
+    function loadContact(){
+      const area = document.getElementById('content-area');
+      area.innerHTML = `
+        <section class="card fade-in">
+          <h2>Contact & Support</h2>
+          <p style="color:var(--muted)">Send feedback or request support.</p>
+          <form onsubmit="event.preventDefault();submitContact()" style="margin-top:12px;display:grid;gap:8px;max-width:700px">
+            <input id="c-name" placeholder="Your name" required>
+            <input id="c-email" placeholder="Your email" required>
+            <select id="c-topic"><option>General</option><option>Policy</option><option>App issue</option></select>
+            <textarea id="c-message" rows="6" placeholder="Message" required></textarea>
+            <div style="display:flex;gap:8px"><button class="btn" type="submit">Send</button><button class="btn ghost" type="button" onclick="clearContact()">Clear</button></div>
+          </form>
+        </section>
+      `;
+    }
 
-        function openModal(url) {
-            document.getElementById('modal').style.display = 'block';
-            document.getElementById('modal-iframe').src = url;
-        }
+    function submitContact(){
+      alert('Thanks! This is a demo — wire up your backend to actually send messages.');
+      clearContact();
+    }
+    function clearContact(){ document.getElementById('c-name')?.value=''; document.getElementById('c-email')?.value=''; document.getElementById('c-message')?.value=''; }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('modal-iframe').src = '';
-        }
+    function openModalExternal(url){
+      // open pdfs or external links in right panel for quick preview
+      const modal = document.getElementById('app-modal');
+      document.getElementById('modal-iframe-left').src = 'about:blank';
+      document.getElementById('modal-iframe-right').src = url;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
 
-        // Load dashboard and set it active on page load
-        window.onload = function() {
-            showDashboard();
-            setActive(document.getElementById('nav-dashboard'));
-        };
-    </script>
+    // search filter for apps
+    function filterApps(q){
+      const grid = document.getElementById('app-grid');
+      if(!grid) return;
+      [...grid.children].forEach(tile => {
+        const text = tile.innerText.toLowerCase();
+        tile.style.display = text.includes(q.toLowerCase()) ? '' : 'none';
+      });
+    }
+
+    function createApp(){
+      // quick demo: create a new placeholder app
+      const newApp = { id: 'new-'+Date.now(), title: 'New App', desc: 'Untitled', repo: 'https://github.com', live: 'about:blank' };
+      apps.unshift(newApp);
+      loadDashboard();
+      setTimeout(()=>openModalWith(newApp), 120);
+    }
+
+    // initial load
+    window.addEventListener('DOMContentLoaded', ()=>{
+      navigate('dashboard');
+    });
+  </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
