@@ -3,45 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Chukspace</title>
-        <link rel="icon" sizes="1000x1000" type="image/x-icon" href="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Icon_new.png?raw=true">
+    <link rel="icon" sizes="1000x1000" type="image/x-icon" href="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Icon_new.png?raw=true">
     <style>
         * { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
+        /* Modern header layout */
         header {
-            background-color: #ffffffff;
-            height: 80px;
+            background-color: #ffffff;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 80px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         header img {
             width: 150px;
+            height: auto;
         }
-        h3 {
-            color: #01325a;
-        }
+
+        /* Horizontal nav beside logo */
         nav {
-            background-color: #34495e;
             display: flex;
-            justify-content: center;
+            gap: 1rem;
         }
         nav a {
-            display: inline-block;
-            color: white;
-            padding: 1rem 1.5rem;
+            color: #34495e;
+            padding: 0.5rem 1rem;
             text-decoration: none;
-            transition: background-color 0.2s;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
         }
         nav a:hover {
             background-color: #1abc9c;
+            color: white;
         }
         nav a.active {
             background-color: #1abc9c;
+            color: white;
             font-weight: bold;
         }
+
         main {
             padding: 1rem;
         }
@@ -68,7 +75,7 @@
             cursor: pointer;
             border-radius: 8px;
             font-weight: bold;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .app-tile:hover {
             transform: translateY(-3px);
@@ -113,18 +120,16 @@
     </style>
 </head>
 <body>
-    <header style="text-align: center;">
-    <img src="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Logo.png?raw=true" alt="Chukspace Logo">
-</header>
-
-
-    <nav>
-        <a href="#" id="nav-dashboard" onclick="setActive(this); showDashboard()">Dashboard</a>
-        <a href="#" id="nav-about" onclick="setActive(this); loadAbout()">About</a>
-        <a href="#" id="nav-policy" onclick="setActive(this); loadPolicy()">Policies</a>
-        <a href="#" id="nav-service" onclick="setActive(this); loadServicePlan()">Services and tools</a>
-        <a href="#" id="nav-service" onclick="setActive(this); loadServicePlan()">Unboarding and training</a>
-    </nav>
+    <header>
+        <img src="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Logo.png?raw=true" alt="Chukspace Logo">
+        <nav>
+            <a href="#" id="nav-dashboard" onclick="setActive(this); showDashboard()">Dashboard</a>
+            <a href="#" id="nav-about" onclick="setActive(this); loadAbout()">About</a>
+            <a href="#" id="nav-policy" onclick="setActive(this); loadPolicy()">Policies</a>
+            <a href="#" id="nav-service" onclick="setActive(this); loadServicePlan()">Services and tools</a>
+            <a href="#" id="nav-training" onclick="setActive(this); loadServicePlan()">Unboarding and training</a>
+        </nav>
+    </header>
 
     <main id="main-content"></main>
 
@@ -290,5 +295,4 @@
     </script>
 </body>
 </html>
-
 
