@@ -11,7 +11,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Modern header layout */
+        /* Header layout */
         header {
             background-color: #ffffff;
             display: flex;
@@ -20,13 +20,14 @@
             padding: 0 2rem;
             height: 80px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
         }
         header img {
             width: 150px;
             height: auto;
         }
 
-        /* Horizontal nav beside logo */
+        /* Nav styles */
         nav {
             display: flex;
             gap: 1rem;
@@ -47,6 +48,43 @@
             background-color: #1abc9c;
             color: white;
             font-weight: bold;
+        }
+
+        /* Hamburger button */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: #34495e;
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile menu hidden by default */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+                position: absolute;
+                top: 80px;
+                right: 0;
+                background-color: #ffffff;
+                flex-direction: column;
+                width: 200px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                padding: 1rem 0;
+                z-index: 100;
+            }
+            nav.show {
+                display: flex;
+            }
+            .menu-toggle {
+                display: flex;
+            }
         }
 
         main {
@@ -122,7 +160,16 @@
 <body>
     <header>
         <img src="https://github.com/Tunnox/Images/blob/main/Chukspace%20Logo/Chukspace%20Logo.png?raw=true" alt="Chukspace Logo">
-        <nav>
+        
+        <!-- Hamburger button -->
+        <div class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Navigation -->
+        <nav id="nav-menu">
             <a href="#" id="nav-dashboard" onclick="setActive(this); showDashboard()">Dashboard</a>
             <a href="#" id="nav-about" onclick="setActive(this); loadAbout()">About</a>
             <a href="#" id="nav-policy" onclick="setActive(this); loadPolicy()">Policies</a>
