@@ -209,7 +209,7 @@
         <!-- Navigation -->
         <nav id="nav-menu">
             <a href="#" id="nav-home" onclick="setActive(this); showhome()">Home</a>
-            <a href="#" id="nav-dashboard" onclick="setActive(this); showDashboard()">Dashboard</a>
+            <a href="#" id="nav-dashboard" onclick="setActive(this); loadDashboard()">Dashboard</a>
             <a href="#" id="nav-about" onclick="setActive(this); loadAbout()">About</a>
             <a href="#" id="nav-policy" onclick="setActive(this); loadPolicy()">Policies</a>
             <a href="#" id="nav-service" onclick="setActive(this); loadServicePlan()">Services and tools</a>
@@ -332,7 +332,7 @@
 }
 
 
-        function showDashboard() {
+        function loadDashboard() {
             document.getElementById('main-content').innerHTML = `
                 <section style="max-width: 900px; margin: auto;">
                     <h1 style="text-align: center; color: #1abc9c; margin-bottom: 2rem;">Dashboard</h1>
@@ -492,6 +492,7 @@
     </script>
 </body>
 </html>
+
 
 
 
