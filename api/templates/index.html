@@ -322,8 +322,34 @@
                             </ul> </div> 
                         </div> 
                     </section> 
+                    
+                    <div class="tabs"> 
+                        <div class="tab" onclick="showContent('market')"><img src="market-icon.svg"> Market Analysis</div> 
+                        <div class="tab" onclick="showContent('operating')"><img src="plan-icon.svg"> Operating Plan</div> 
+                        <div class="tab" onclick="showContent('marketing')"><img src="sales-icon.svg"> Marketing Plan</div> 
+                        <div class="tab" onclick="showContent('legal')"><img src="legal-icon.svg"> Legal Structure</div> 
+                        <div class="tab" onclick="showContent('Trusties')"><img src="legal-icon.svg"> Legal Structure</div> 
+                    </div> 
+                    <div id="market" class="content" style="align-items: center;"> 
+                        <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_Market_analysis.png?raw=True' style="width:50%; border-radius: 10px;"> 
+                        <p>With increasing regulatory requirements and a heightened focus on data ethics, the demand for reliable data stewardship services is growing. Our analysis indicates strong opportunities among charities, non-profits, and small to mid-sized enterprises seeking affordable yet professional solutions.</p> 
+                    </div> 
+                    <div id="operating" class="content" style="display:none;"> 
+                        <p>Our operational framework focuses on client onboarding, continuous monitoring, and adaptive improvement. We implement secure infrastructure and provide ongoing support to ensure our clients’ data needs are met efficiently.</p> </div> <div id="marketing" class="content" style="display:none;"> <p>We leverage digital marketing, partnerships, and community outreach to promote our services, emphasising trust, expertise, and affordability.</p> 
+                    </div> 
+                    <div id="legal" class="content" style="display:none;"> 
+                        <p>We are registered as an Uniincorporated Charitable Associations</p> 
+                    </div> 
+                    <div id="Trusties" class="content" style="display:none;"> 
+                        <p>We ensure governance through a dedicated board of trustees committed to transparency and ethical operations.</p> 
+                    </div> 
                 `; 
             }
+        
+        function showContent(id) { 
+            document.querySelectorAll('.content').forEach(c => c.style.display = 'none'); 
+            document.getElementById(id).style.display = 'block'; 
+        } 
 
 
         function showDashboard() {
@@ -486,6 +512,7 @@
     </script>
 </body>
 </html>
+
 
 
 
