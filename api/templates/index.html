@@ -157,6 +157,42 @@
             cursor: pointer;
             font-size: 1rem;
         }
+         /* Footer */
+        footer {
+            background-color: #34495e;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        footer .footer-content {
+            max-width: 900px;
+            margin: auto;
+        }
+        footer h4 {
+            margin-bottom: 0.5rem;
+            color: #1abc9c;
+        }
+        footer p, footer a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        footer a:hover {
+            color: #1abc9c;
+        }
+        .social-links {
+            margin-top: 1rem;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            font-size: 1.2rem;
+        }
+        .footer-bottom {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -182,6 +218,23 @@
     </header>
 
     <main id="main-content"></main>
+
+    <footer>
+        <div class="footer-content">
+            <h4>Contact Us</h4>
+            <p>Email: <a href="mailto:info@chukspace.org">info@chukspace.org</a></p>
+            <p>Phone: +44 123 456 7890</p>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 Chukspace. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
     <div id="modal" class="modal">
         <div class="modal-content">
@@ -444,6 +497,7 @@
     </script>
 </body>
 </html>
+
 
 
 
