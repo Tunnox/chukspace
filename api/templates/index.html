@@ -193,6 +193,42 @@
             font-size: 0.85rem;
             opacity: 0.8;
         }
+        .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .tab {
+    background: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .tab:hover {
+    background: #eaf2ff;
+  }
+  .tab img {
+    width: 20px;
+    height: 20px;
+  }
+  .content {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    animation: fadeIn 0.4s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
     </style>
 </head>
 <body>
@@ -218,6 +254,25 @@
     </header>
 
     <main id="main-content"></main>
+    <!-- Trail Section -->
+            <div class="tabs">
+  <div class="tab" onclick="showContent('market')"><img src="market-icon.svg"> Market Analysis</div>
+  <div class="tab" onclick="showContent('operating')"><img src="plan-icon.svg"> Operating Plan</div>
+  <div class="tab" onclick="showContent('marketing')"><img src="sales-icon.svg"> Marketing Plan</div>
+  <div class="tab" onclick="showContent('legal')"><img src="legal-icon.svg"> Legal Structure</div>
+</div>
+
+<div id="market" class="content">With increasing regulatory requirements...</div>
+<div id="operating" class="content" style="display:none;">Our operational framework focuses...</div>
+<div id="marketing" class="content" style="display:none;">We leverage digital marketing...</div>
+<div id="legal" class="content" style="display:none;">Charitable Incorporated Organisation (CIO)...</div>
+
+<script>
+function showContent(id) {
+  document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+</script>
 
     <footer>
         <div class="footer-content">
@@ -505,6 +560,7 @@
     </script>
 </body>
 </html>
+
 
 
 
