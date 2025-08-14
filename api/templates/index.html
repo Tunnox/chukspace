@@ -193,42 +193,61 @@
             font-size: 0.85rem;
             opacity: 0.8;
         }
-        .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .tab {
-    background: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .tab:hover {
-    background: #eaf2ff;
-  }
-  .tab img {
-    width: 20px;
-    height: 20px;
-  }
-  .content {
-    max-width: 800px;
-    margin: auto;
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    animation: fadeIn 0.4s ease-in-out;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+         .tabs {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+
+    .tab {
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        background: #f4f4f4;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .tab img {
+        width: 20px;
+    }
+
+    .tab.active {
+        background: #0056d2;
+        color: #fff;
+        transform: translateY(-3px);
+    }
+
+    .tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        width: 3px;
+        height: 15px;
+        background: #0056d2;
+        transform: translateX(-50%);
+    }
+
+    .content {
+        background: #fff;
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+    }
+
+    .content.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
     </style>
 </head>
 <body>
@@ -330,29 +349,46 @@
                         <div class="tab" onclick="showContent('legal')"><img src="legal-icon.svg"> We are registered</div> 
                         <div class="tab" onclick="showContent('Trusties')"><img src="legal-icon.svg"> We have Trustees</div> 
                     </div> 
-                    <div id="market" class="content" style="align-items: center;"> 
-                        <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_Market_analysis.png?raw=True' style="width:50%; border-radius: 10px;"> 
+                    
+                    <div id="market" class="content">
+                        <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_Market_analysis.png?raw=True' style="width:50%; border-radius: 10px;">
                         <p>We exist to help organisations navigate the growing complexity of data stewardship. As regulations tighten and the importance of data ethics rises, many charities, non-profits, and small to mid-sized enterprises face the challenge of protecting and managing their information responsibly—without the high costs of large-scale solutions. Our mission is to provide these organisations with affordable, professional, and ethical data stewardship services that ensure compliance, safeguard integrity, and unlock the value of their data.</p> 
-                    </div> 
-                    <div id="operating" class="content" style="display:none;"> 
+                    </div>
+                    
+                    <div id="operating" class="content" style="display:none;">
                         <p>Our operational framework focuses on client onboarding, continuous monitoring, and adaptive improvement. We implement secure infrastructure and provide ongoing support to ensure our clients’ data needs are met efficiently.</p> 
-                    </div> 
-                    <div id="marketing" class="content" style="display:none;"> 
+                    </div>
+                    
+                    <div id="marketing" class="content" style="display:none;">
                         <p>We leverage digital marketing, partnerships, and community outreach to promote our services, emphasising trust, expertise, and affordability.</p> 
-                    </div> 
-                    <div id="legal" class="content" style="display:none;"> 
+                    </div>
+                    
+                    <div id="legal" class="content" style="display:none;">
                         <p>We are registered as an Uniincorporated Charitable Associations</p> 
-                    </div> 
-                    <div id="Trusties" class="content" style="display:none;"> 
+                    </div>
+                    
+                    <div id="Trusties" class="content" style="display:none;">
                         <p>We ensure governance through a dedicated board of trustees committed to transparency and ethical operations.</p> 
-                    </div> 
+                    </div>
                 `; 
             }
         
         function showContent(id) { 
-            document.querySelectorAll('.content').forEach(c => c.style.display = 'none'); 
-            document.getElementById(id).style.display = 'block'; 
-        } 
+            // Hide all content panels
+            document.querySelectorAll('.content').forEach(c => {
+                c.style.display = 'none';
+                c.classList.remove('show');
+            });
+        
+            // Show selected content with animation
+            const activeContent = document.getElementById(id);
+            activeContent.style.display = 'block';
+            setTimeout(() => activeContent.classList.add('show'), 10);
+        
+            // Update active tab style
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
 
 
         function showDashboard() {
@@ -515,6 +551,7 @@
     </script>
 </body>
 </html>
+
 
 
 
