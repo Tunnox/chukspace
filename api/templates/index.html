@@ -244,7 +244,40 @@
 
         <!-- Navigation -->
         <nav id="nav-menu">
-            <a href="#" id="nav-home" onclick="setActive(this); showhome()">Home</a>
+            <a href="#" id="nav-home" onclick="setActive(this); showhome()">Home
+            <div class="tabs"> 
+                <div class="tab" onclick="showContent('market')">
+                    <img src="market-icon.svg"> Market Analysis</div> 
+                <div class="tab" onclick="showContent('operating')">
+                    <img src="plan-icon.svg"> Operating Plan</div> 
+                <div class="tab" onclick="showContent('marketing')">
+                    <img src="sales-icon.svg"> Marketing Plan</div> 
+                <div class="tab" onclick="showContent('legal')">
+                    <img src="legal-icon.svg"> Legal Structure</div> 
+                <div class="tab" onclick="showContent('Trusties')">
+                    <img src="legal-icon.svg"> Legal Structure</div> 
+            </div> 
+                <div id="market" class="content" style="align-items: center;"> 
+                    <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_Market_analysis.png?raw=True' style="width:50%; border-radius: 10px;"> 
+                    <p>With increasing regulatory requirements and a heightened focus on data ethics, the demand for reliable data stewardship services is growing. Our analysis indicates strong opportunities among charities, non-profits, and small to mid-sized enterprises seeking affordable yet professional solutions.</p> 
+                </div> 
+                <div id="operating" class="content" style="display:none;"> 
+                    <p>Our operational framework focuses on client onboarding, continuous monitoring, and adaptive improvement. We implement secure infrastructure and provide ongoing support to ensure our clients’ data needs are met efficiently.</p> 
+                </div> 
+                <div id="marketing" class="content" style="display:none;"> 
+                    <p>We leverage digital marketing, partnerships, and community outreach to promote our services, emphasising trust, expertise, and affordability.</p> 
+                </div> 
+                <div id="legal" class="content" style="display:none;"> 
+                    <p>We are registered as an Uniincorporated Charitable Associations</p> 
+                </div> 
+                <div id="Trusties" class="content" style="display:none;"> 
+                    <p>We ensure governance through a dedicated board of trustees committed to transparency and ethical operations.</p> 
+                </div> 
+                <script> function showContent(id) { 
+                    document.querySelectorAll('.content').forEach(c => c.style.display = 'none'); 
+                    document.getElementById(id).style.display = 'block'; } 
+                </script>
+            </a>
             <a href="#" id="nav-dashboard" onclick="setActive(this); showDashboard()">Dashboard</a>
             <a href="#" id="nav-about" onclick="setActive(this); loadAbout()">About</a>
             <a href="#" id="nav-policy" onclick="setActive(this); loadPolicy()">Policies</a>
@@ -284,102 +317,46 @@
             element.classList.add('active');
         }
 
-        function showhome() {
-    document.getElementById('main-content').innerHTML = `
-        <section style="max-width: 1100px; margin: auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <div class="card highlight" style="background: url('https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_newer_home.png?raw=True') no-repeat center center; background-size: cover;">
-            <h1 style="text-align: center; color: #1abc9c; font-size: 3rem; margin-bottom: 1rem;">Chukspace</h1>
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+        function showhome() { 
+            document.getElementById('main-content').innerHTML = `
+                <section style="max-width: 1100px; margin: auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;"> 
+                    <div class="card highlight" style="background: url('https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_newer_home.png?raw=True') no-repeat center center; background-size: cover;"> 
+                        <h1 style="text-align: center; color: #1abc9c; font-size: 3rem; margin-bottom: 1rem;">Chukspace</h1> 
+                        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"> 
+                        <p style=" text-align: center; font-size: 1.25rem; margin-bottom: 3rem; font-family: 'Inter', sans-serif; line-height: 1.6; color: #1a1a1a; "> 
+                        Your trusted partner in <strong style="font-weight: 600; color: #0056d2;">Data Stewardship</strong> <br> Enabling secure, compliant, and efficient management of your organisation’s information assets. </p> 
+                    </div> 
+                    
+                <!-- Executive Summary --> 
+                <section style="margin-bottom: 3rem;"> 
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;"> 
+                        <div> 
+                            <p>Chukspace provides specialised data stewardship services designed to help non-profit organisations manage, protect, and ethically leverage their data in compleiance with UK laws. <br> We offer strategic guidance, operational support, and compliance expertise to ensure data integrity and accessibility.</p> 
+                        </div> 
+                        <div> 
+                            <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_suammary.png?raw=True' style="width:100%; border-radius: 10px;"> 
+                        </div> 
+                    </div> 
+                </section> 
                 
-                <p style="
-                    text-align: center; 
-                    font-size: 1.25rem; 
-                    margin-bottom: 3rem; 
-                    font-family: 'Inter', sans-serif; 
-                    line-height: 1.6; 
-                    color: #1a1a1a;
-                ">
-                    Your trusted partner in <strong style="font-weight: 600; color: #0056d2;">Data Stewardship</strong> <br> 
-                    Enabling secure, compliant, and efficient management of your organisation’s information assets.
-                </p>
-        </div>
-
-        <!-- Executive Summary -->
-        <section style="margin-bottom: 3rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
-                <div>
-                    <p>Chukspace provides specialised data stewardship services designed to help non-profit organisations manage, protect, and ethically leverage their data in compliance with UK laws. <br> We offer strategic guidance, operational support, and compliance expertise to ensure data integrity and accessibility.</p>
-                </div>
-                <div>
-                    <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_suammary.png?raw=True' style="width:100%; border-radius: 10px;">
-                </div>
-            </div>
-        </section>
-
-        <!-- Service Overview -->
-        <section style="margin-bottom: 3rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
-                <div>
-                    <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_services.png?raw=True' style="width:100%; border-radius: 10px;">
-                </div>
-                <div>
-                    <ul style="list-style: none; padding: 0;">
-                        <li><h4>Comprehensive Data Management Solutions</h4></li>
-                        <li><h4>Policy Development & Compliance Support</h4></li>
-                        <li><h4>Secure Data Storage & Access Control</h4></li>
-                        <li><h4>Training & Awareness Programs</h4></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Interactive Tabs -->
-        <section style="margin-bottom: 3rem;">
-            <div class="tabs" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
-                <div class="tab" onclick="showContent('market')" style="cursor: pointer; padding: 0.5rem 1rem; background: #f4f4f4; border-radius: 6px; display: flex; align-items: center; gap: 0.5rem;">
-                    <img src="market-icon.svg" style="width:20px;"> Market Analysis
-                </div>
-                <div class="tab" onclick="showContent('operating')" style="cursor: pointer; padding: 0.5rem 1rem; background: #f4f4f4; border-radius: 6px; display: flex; align-items: center; gap: 0.5rem;">
-                    <img src="plan-icon.svg" style="width:20px;"> Operating Plan
-                </div>
-                <div class="tab" onclick="showContent('marketing')" style="cursor: pointer; padding: 0.5rem 1rem; background: #f4f4f4; border-radius: 6px; display: flex; align-items: center; gap: 0.5rem;">
-                    <img src="sales-icon.svg" style="width:20px;"> Marketing Plan
-                </div>
-                <div class="tab" onclick="showContent('legal')" style="cursor: pointer; padding: 0.5rem 1rem; background: #f4f4f4; border-radius: 6px; display: flex; align-items: center; gap: 0.5rem;">
-                    <img src="legal-icon.svg" style="width:20px;"> Legal Structure
-                </div>
-                <div class="tab" onclick="showContent('trustees')" style="cursor: pointer; padding: 0.5rem 1rem; background: #f4f4f4; border-radius: 6px; display: flex; align-items: center; gap: 0.5rem;">
-                    <img src="trustees-icon.svg" style="width:20px;"> Trustees
-                </div>
-            </div>
-
-            <div id="market" class="content" style="align-items: center;">
-                <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_Market_analysis.png?raw=True' style="width:50%; border-radius: 10px; display:block; margin:auto;">
-                <p style="margin-top:1rem;">With increasing regulatory requirements and a heightened focus on data ethics, the demand for reliable data stewardship services is growing. Our analysis indicates strong opportunities among charities, non-profits, and small to mid-sized enterprises seeking affordable yet professional solutions.</p>
-            </div>
-            <div id="operating" class="content" style="display:none;">
-                <p>Our operational framework focuses on client onboarding, continuous monitoring, and adaptive improvement. We implement secure infrastructure and provide ongoing support to ensure our clients’ data needs are met efficiently.</p>
-            </div>
-            <div id="marketing" class="content" style="display:none;">
-                <p>We leverage digital marketing, partnerships, and community outreach to promote our services, emphasising trust, expertise, and affordability.</p>
-            </div>
-            <div id="legal" class="content" style="display:none;">
-                <p>We are registered as an Unincorporated Charitable Association.</p>
-            </div>
-            <div id="trustees" class="content" style="display:none;">
-                <p>We ensure governance through a dedicated board of trustees committed to transparency and ethical operations.</p>
-            </div>
-        </section>
-
-        <script>
-            function showContent(id) {
-                document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-                document.getElementById(id).style.display = 'block';
+                <!-- Service Overview --> 
+                
+                <section style="margin-bottom: 3rem;"> 
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;"> 
+                        <div> 
+                            <img src='https://github.com/Tunnox/chukspace/blob/main/api/static/images/Chukspace_services.png?raw=True' style="width:100%; border-radius: 10px;"> 
+                        </div> 
+                        <div> 
+                            <ul style="list-style: none; padding: 0;"> 
+                                <li><h4>Comprehensive Data Management Solutions</h4></li> 
+                                <li><h4>Policy Development & Compliance Support</h4></li> 
+                                <li><h4>Secure Data Storage & Access Control</h4></li> 
+                                <li><h4>Training & Awareness Programs</h4></li> 
+                            </ul> </div> 
+                        </div> 
+                    </section> 
+                ; 
             }
-        </script>
-    `;
-}
-
 
 
         function showDashboard() {
