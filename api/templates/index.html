@@ -256,23 +256,34 @@
     <main id="main-content"></main>
     <!-- Trail Section -->
             <div class="tabs">
-  <div class="tab" onclick="showContent('market')"><img src="market-icon.svg"> Market Analysis</div>
-  <div class="tab" onclick="showContent('operating')"><img src="plan-icon.svg"> Operating Plan</div>
-  <div class="tab" onclick="showContent('marketing')"><img src="sales-icon.svg"> Marketing Plan</div>
-  <div class="tab" onclick="showContent('legal')"><img src="legal-icon.svg"> Legal Structure</div>
-</div>
-
-<div id="market" class="content">With increasing regulatory requirements...</div>
-<div id="operating" class="content" style="display:none;">Our operational framework focuses...</div>
-<div id="marketing" class="content" style="display:none;">We leverage digital marketing...</div>
-<div id="legal" class="content" style="display:none;">Charitable Incorporated Organisation (CIO)...</div>
-
-<script>
-function showContent(id) {
-  document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-}
-</script>
+                  <div class="tab" onclick="showContent('market')"><img src="market-icon.svg"> Market Analysis</div>
+                  <div class="tab" onclick="showContent('operating')"><img src="plan-icon.svg"> Operating Plan</div>
+                  <div class="tab" onclick="showContent('marketing')"><img src="sales-icon.svg"> Marketing Plan</div>
+                  <div class="tab" onclick="showContent('legal')"><img src="legal-icon.svg"> Legal Structure</div>
+            </div>
+                
+                <div id="market" class="content">
+                    <p>With increasing regulatory requirements and a heightened focus on data ethics, the demand for reliable data stewardship services is growing. Our analysis indicates strong opportunities among charities, non-profits, and small to mid-sized enterprises seeking affordable yet professional solutions.</p>
+                    <img src="https://source.unsplash.com/1000x400/?analytics,chart" alt="Market trends" style="width:100%; border-radius: 10px; margin-top: 1rem;">
+                </div>
+                <div id="operating" class="content" style="display:none;">
+                     <p>Our operational framework focuses on client onboarding, continuous monitoring, and adaptive improvement. We implement secure infrastructure and provide ongoing support to ensure our clients’ data needs are met efficiently.</p>
+                </div>
+                <div id="marketing" class="content" style="display:none;">
+                    <p>We leverage digital marketing, partnerships, and community outreach to promote our services, emphasising trust, expertise, and affordability.</p>
+                </div>
+                <div id="legal" class="content" style="display:none;">
+                    <p>We are registered as an Uniincorporated Charitable Associations</p>
+                </div>
+                <div id="legal" class="content" style="display:none;">
+                    <p>We ensure governance through a dedicated board of trustees committed to transparency and ethical operations.</p>
+                </div>
+                <script>
+                function showContent(id) {
+                  document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
+                  document.getElementById(id).style.display = 'block';
+                }
+                </script>
 
     <footer>
         <div class="footer-content">
@@ -353,49 +364,6 @@ function showContent(id) {
                     </div>
                 </div>
             </section>
-
-            <!-- Market Analysis -->
-            <section style="margin-bottom: 3rem;">
-                <h2 style="color: #1abc9c;">Market Analysis</h2>
-                <p>With increasing regulatory requirements and a heightened focus on data ethics, the demand for reliable data stewardship services is growing. Our analysis indicates strong opportunities among charities, non-profits, and small to mid-sized enterprises seeking affordable yet professional solutions.</p>
-                <img src="https://source.unsplash.com/1000x400/?analytics,chart" alt="Market trends" style="width:100%; border-radius: 10px; margin-top: 1rem;">
-            </section>
-
-            <!-- Operating Plan -->
-            <section style="margin-bottom: 3rem;">
-                <h2 style="color: #1abc9c;">Operating Plan</h2>
-                <p>Our operational framework focuses on client onboarding, continuous monitoring, and adaptive improvement. We implement secure infrastructure and provide ongoing support to ensure our clients’ data needs are met efficiently.</p>
-            </section>
-
-            <!-- Marketing and Sales Plan -->
-            <section style="margin-bottom: 3rem;">
-                <h2 style="color: #1abc9c;">Marketing & Sales Plan</h2>
-                <p>We leverage digital marketing, partnerships, and community outreach to promote our services, emphasising trust, expertise, and affordability.</p>
-            </section>
-
-            <!-- Legal Structure -->
-            <section style="margin-bottom: 3rem;">
-                <h2 style="color: #1abc9c;">Legal Structure Options</h2>
-                <ul>
-                    <li><strong>Charitable Incorporated Organisation (CIO):</strong> Ideal for charities with legal personality.</li>
-                    <li><strong>Charitable Company (Limited by Guarantee):</strong> Suitable for trading activities.</li>
-                    <li><strong>Charitable Trust:</strong> For asset management with trustees.</li>
-                    <li><strong>Unincorporated Charitable Association:</strong> For simpler setups without property or staff.</li>
-                </ul>
-            </section>
-
-            <!-- Trustees -->
-            <section style="margin-bottom: 3rem;">
-                <h2 style="color: #1abc9c;">Trustees</h2>
-                <p>We ensure governance through a dedicated board of trustees committed to transparency and ethical operations.</p>
-            </section>
-
-            <!-- Policy Statement -->
-            <section style="margin-bottom: 3rem;">
-                <h2 style="color: #1abc9c;">Policy Statement</h2>
-                <p>Our policies ensure data privacy, regulatory compliance, and ethical stewardship, aligning with best practices in the industry.</p>
-            </section>
-        </section>
     `;
 }
 
@@ -560,6 +528,7 @@ function showContent(id) {
     </script>
 </body>
 </html>
+
 
 
 
