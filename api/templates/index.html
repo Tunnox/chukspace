@@ -373,7 +373,7 @@
                 `; 
             }
         
-        function showContent(id) { 
+        function showContent(id, el) { 
             // Hide all content panels
             document.querySelectorAll('.content').forEach(c => {
                 c.style.display = 'none';
@@ -387,8 +387,16 @@
         
             // Update active tab style
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if (el) el.classList.add('active');
         }
+        
+        // Run when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstTab = document.querySelector('.tab');
+            if (firstTab) {
+                showContent(firstTab.getAttribute('onclick').match(/'(.*?)'/)[1], firstTab);
+            }
+        });
 
 
         function showDashboard() {
@@ -551,6 +559,7 @@
     </script>
 </body>
 </html>
+
 
 
 
