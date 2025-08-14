@@ -372,7 +372,7 @@
                 `; 
             }
         
-        function showContent(id, el) { 
+        function showContent(id) { 
             // Hide all content panels
             document.querySelectorAll('.content').forEach(c => {
                 c.style.display = 'none';
@@ -386,17 +386,8 @@
         
             // Update active tab style
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            if (el) el.classList.add('active');
+            event.currentTarget.classList.add('active');
         }
-        
-        // Run when DOM is ready
-        document.addEventListener('DOMContentLoaded', () => {
-            const firstTab = document.querySelector('.tab');
-            if (firstTab) {
-                showContent(firstTab.getAttribute('onclick').match(/'(.*?)'/)[1], firstTab);
-            }
-        });
-
 
         function showDashboard() {
             document.getElementById('main-content').innerHTML = `
@@ -558,6 +549,7 @@
     </script>
 </body>
 </html>
+
 
 
 
