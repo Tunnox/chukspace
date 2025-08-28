@@ -248,6 +248,48 @@
         opacity: 1;
         transform: translateY(0);
     }
+    .search-result-item {
+    padding: 0.5rem 1rem;
+    background: #fff;
+    margin: 0.25rem 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.search-result-item:hover {
+    background: #1abc9c;
+    color: #fff;
+}
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-top: 1rem;
+}
+button {
+    background: #1abc9c;
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+button:hover {
+    background: #16a085;
+}
+.warning-card {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+}
+
     </style>
 </head>
 <body>
@@ -405,24 +447,25 @@
                             <div class="app-tile" onclick="openModal('https://www.chukspace.fyi/')">AGT Sheffield</div>
                         </div>
                         <div class="glass-card">
-                            <h3>Search Workers</h3>
+                            <h3>Create Admins</h3>
+                            <p>search for the worker you want to assign an admin</p>
                             <input type="text" id="workerSearch" class="form-control" placeholder="Type worker name...">
                             <div id="workerResults" class="mt-3"></div>
-                        </div>
-                        
-                        <div id="adminForm" class="glass-card d-none mt-4">
-                            <h3>Create Admin Login</h3>
-                            <form id="createAdminForm">
-                                <input type="hidden" id="user_id">
-                                <input type="hidden" id="worker_id">
-                                <div><input type="text" id="role" placeholder="Role"></div>
-                                <div><input type="text" id="user_name" placeholder="Username"></div>
-                                <div><input type="email" id="email" placeholder="Email"></div>
-                                <div><input type="password" id="password" placeholder="Password"></div>
-                                <button type="submit">Create Admin</button>
-                            </form>
-                            <div id="adminMessage" class="mt-2"></div>
-                        </div>
+                            </div>
+                            <div id="adminForm" class="glass-card d-none mt-4">
+                                <h3>Create Admin Login</h3>
+                                <form id="createAdminForm">
+                                    <input type="hidden" id="user_id">
+                                    <input type="hidden" id="worker_id">
+                                    <div><input type="text" id="role" placeholder="Role"></div>
+                                    <div><input type="text" id="user_name" placeholder="Username"></div>
+                                    <div><input type="email" id="email" placeholder="Email"></div>
+                                    <div><input type="password" id="password" placeholder="Password"></div>
+                                    <button type="submit">Create Admin</button>
+                                </form>
+                                <div id="adminMessage" class="mt-2"></div>
+                            </div>
+
                     </section>
                 `;
 
@@ -448,9 +491,41 @@
                             item.className = 'search-result-item';
                             item.textContent = `${worker.first_name} ${worker.last_name}`;
                             item.onclick = () => {
-                                document.getElementById('adminForm').classList.remove('d-none');
-                                document.getElementById('user_id').value = worker.user_id || worker.id; // fallback if only id is returned
-                                document.getElementById('worker_id').value = worker.worker_id || worker.id;
+                                fetch(`/workers/${worker.id}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        const resultsDiv = document.getElementById('workerResults');
+                                        resultsDiv.innerHTML = `
+                                            <div class="card">
+                                                <h3>User Details</h3>
+                                                <p><strong>Name:</strong> ${data.user.first_name} ${data.user.last_name}</p>
+                                            </div>
+                                        `;
+
+                                        const adminForm = document.getElementById('adminForm');
+
+                                        if (data.worker) {
+                                            // ✅ Worker exists → show worker details + form
+                                            resultsDiv.innerHTML += `
+                                                <div class="card">
+                                                    <h3>Worker Details</h3>
+                                                    <p><strong>Role:</strong> ${data.worker.role}</p>
+                                                    <p><strong>Department:</strong> ${data.worker.department}</p>
+                                                </div>
+                                            `;
+                                            adminForm.classList.remove('d-none');
+                                            document.getElementById('user_id').value = data.user.id;
+                                            document.getElementById('worker_id').value = data.worker.worker_id;
+                                        } else {
+                                            // ⚠️ Not registered worker → show warning + hide form
+                                            adminForm.classList.add('d-none');
+                                            resultsDiv.innerHTML += `
+                                                <div class="warning-card">
+                                                    ⚠️ This user is not a registered worker. They must be registered before being assigned as an Admin.
+                                                </div>
+                                            `;
+                                        }
+                                    });
                             };
                             resultsDiv.appendChild(item);
                         });
