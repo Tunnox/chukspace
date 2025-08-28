@@ -51,6 +51,38 @@ def worker_search():
     # With RealDictCursor, `results` is already a list of dicts!
     return jsonify(results)
 
+
+# 🔎 Get worker details
+@app.route('/workers/<int:user_id>', methods=['GET'])
+def get_worker_details(user_id):
+    cursor = connection.cursor(cursor_factory=RealDictCursor)
+
+    # Get user data first
+    cursor.execute("""
+        SELECT id, first_name, last_name
+        FROM public."agt_user_data_records"
+        WHERE id = %s
+    """, (user_id,))
+    user = cursor.fetchone()
+
+    if not user:
+        cursor.close()
+        return jsonify({"error": "User not found"}), 404
+
+    # Check if the user exists in worker table
+    cursor.execute("""
+        SELECT id AS worker_id, role, department
+        FROM public."agt_workers_voluntiers_records"
+        WHERE user_id = %s
+    """, (user_id,))
+    worker = cursor.fetchone()
+    cursor.close()
+
+    return jsonify({
+        "user": user,
+        "worker": worker  # will be null if not found
+    })
+
 # ➕ Create admin
 @app.route('/admin/create', methods=['POST'])
 def create_admin():
