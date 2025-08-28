@@ -290,6 +290,47 @@ button:hover {
     font-size: 0.95rem;
 }
 
+/* Search bar styling */
+#workerSearch {
+    width: 100%;
+    max-width: 600px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+#workerSearch:focus {
+    border-color: #1abc9c;
+    box-shadow: 0 4px 10px rgba(26, 188, 156, 0.2);
+}
+
+/* Dropdown results under search bar */
+#workerResults {
+    max-width: 600px;
+    background: #fff;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+.search-result-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+.search-result-item:last-child {
+    border-bottom: none;
+}
+.search-result-item:hover {
+    background: #1abc9c;
+    color: #fff;
+}
+
     </style>
 </head>
 <body>
@@ -521,7 +562,7 @@ button:hover {
                                             adminForm.classList.add('d-none');
                                             resultsDiv.innerHTML += `
                                                 <div class="warning-card">
-                                                    ⚠️ This user is not a registered worker. They must be registered before being assigned as an Admin.
+                                                    ⚠️ This user is not on the workers register. They must either be a worker, head of department or pastorate before being assigned as an Admin.
                                                 </div>
                                             `;
                                         }
