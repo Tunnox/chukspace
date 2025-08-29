@@ -479,48 +479,81 @@ button:hover {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.currentTarget.classList.add('active');
         }
-
+        // ///////////////////// DASHBOARD ////////////////////////////////////////////////
         function showDashboard() {
                 document.getElementById('main-content').innerHTML = `
                     <section style="max-width: 900px; margin: auto;">
                         <h1 style="text-align: center; color: #1abc9c; margin-bottom: 2rem;">Dashboard</h1>
-                        <div class="app-grid">
-                            <div class="app-tile" onclick="openModal('https://www.chukspace.fyi/')">AGT Sheffield</div>
-                        </div>
+
+                        <!-- Create Admins -->
                         <div class="glass-card">
                             <h3>Create Admins</h3>
-                            <p>search for the worker you want to assign an admin</p>
+                            <p>Search for the worker you want to assign as an admin</p>
                             <input type="text" id="workerSearch" class="form-control" placeholder="Type worker name...">
                             <div id="workerResults" class="mt-3"></div>
-                            </div>
-                            <div id="adminForm" class="glass-card d-none mt-4">
-                                <h3>Create Admin Login</h3>
-                                <form id="createAdminForm">
+
+                            <!-- Form stays hidden until search success -->
+                            <div id="adminForm" class="d-none mt-4">
+                                <h3>Create Login</h3>
+                                <form id="createAdminForm" style="display: flex; flex-direction: column; gap: 1rem;">
                                     <input type="hidden" id="user_id">
                                     <input type="hidden" id="worker_id">
-                                    <div><input type="text" id="role" placeholder="Role"></div>
-                                    <div><input type="text" id="user_name" placeholder="Username"></div>
-                                    <div><input type="email" id="email" placeholder="Email"></div>
-                                    <div><input type="password" id="password" placeholder="Password"></div>
-                                    <button type="submit">Create Admin</button>
+
+                                    <label>
+                                        Role
+                                        <select id="role" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:8px;">
+                                            <option value="super_admin">Super Admin</option>
+                                            <option value="hod">Head of Department (HOD)</option>
+                                            <option value="staff_admin">Staff Admin</option>
+                                        </select>
+                                    </label>
+
+                                    <label>
+                                        Username
+                                        <input type="text" id="user_name" placeholder="Enter username" 
+                                            style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:8px;">
+                                    </label>
+
+                                    <label>
+                                        Email
+                                        <input type="email" id="email" placeholder="Enter email"
+                                            style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:8px;">
+                                    </label>
+
+                                    <label>
+                                        Password
+                                        <input type="password" id="password" placeholder="Enter password"
+                                            style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:8px;">
+                                    </label>
+
+                                    <button type="submit" style="background:#1abc9c; color:white; padding:0.75rem; border:none; border-radius:8px; cursor:pointer;">Create Admin</button>
                                 </form>
                                 <div id="adminMessage" class="mt-2"></div>
                             </div>
+                        </div>
 
+                        <!-- Worker Approval Section -->
+                        <div class="glass-card">
+                            <h3>Worker Approvals</h3>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span id="approvalNotification" style="background:#e74c3c; color:white; padding:0.5rem 1rem; border-radius:20px; font-weight:bold;">0</span>
+                                <select id="approvalDropdown" style="padding:0.5rem; border-radius:8px; border:1px solid #ccc;">
+                                    <option value="">Select pending worker...</option>
+                                </select>
+                            </div>
+                            <div id="approvalDetails" class="mt-3"></div>
+                        </div>
                     </section>
                 `;
 
-                // 🔎 Worker search
+                // 🔎 Worker search (unchanged)
                 document.getElementById('workerSearch').addEventListener('input', function () {
                     const keyword = this.value.trim();
                     if (keyword.length < 2) return;
 
                     fetch('/workers/search', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: new URLSearchParams({ keyword })
                     })
                     .then(res => res.json())
@@ -535,18 +568,14 @@ button:hover {
                                 fetch(`/workers/${worker.id}`)
                                     .then(res => res.json())
                                     .then(data => {
-                                        const resultsDiv = document.getElementById('workerResults');
                                         resultsDiv.innerHTML = `
                                             <div class="card">
                                                 <h3>User Details</h3>
                                                 <p><strong>Name:</strong> ${data.user.first_name} ${data.user.last_name}</p>
                                             </div>
                                         `;
-
                                         const adminForm = document.getElementById('adminForm');
-
                                         if (data.worker) {
-                                            // ✅ Worker exists → show worker details + form
                                             resultsDiv.innerHTML += `
                                                 <div class="card">
                                                     <h3>Worker Details</h3>
@@ -558,11 +587,10 @@ button:hover {
                                             document.getElementById('user_id').value = data.user.id;
                                             document.getElementById('worker_id').value = data.worker.worker_id;
                                         } else {
-                                            // ⚠️ Not registered worker → show warning + hide form
                                             adminForm.classList.add('d-none');
                                             resultsDiv.innerHTML += `
                                                 <div class="warning-card">
-                                                    ⚠️ This user is not on the workers register. They must either be a worker, head of department or pastorate before being assigned as an Admin.
+                                                    ⚠️ This user is not on the workers register.
                                                 </div>
                                             `;
                                         }
@@ -573,7 +601,7 @@ button:hover {
                     });
                 });
 
-                // ➕ Create admin
+                // ➕ Create admin (unchanged logic)
                 document.getElementById('createAdminForm').addEventListener('submit', function (e) {
                     e.preventDefault();
                     const payload = {
@@ -593,12 +621,102 @@ button:hover {
                     .then(res => res.json())
                     .then(data => {
                         const msg = document.getElementById('adminMessage');
-                        msg.textContent = data.success 
-                            ? "✅ Admin login created successfully!" 
-                            : "❌ Failed to create admin.";
+                        if (data.success) {
+                            msg.textContent = "✅ Admin login created successfully!";
+
+                            // Clear search box & results
+                            document.getElementById('workerSearch').value = '';
+                            document.getElementById('workerResults').innerHTML = '';
+
+                            // Reset form fields
+                            document.getElementById('createAdminForm').reset();
+
+                            // Hide form again
+                            document.getElementById('adminForm').classList.add('d-none');
+                        } else {
+                            msg.textContent = "❌ Failed to create admin.";
+                        }
                     });
                 });
+
+                // 🔔 Worker Approvals
+                fetch('/approvals/pending')
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('approvalNotification').textContent = data.length;
+                        const dropdown = document.getElementById('approvalDropdown');
+                        data.forEach(record => {
+                            const opt = document.createElement('option');
+                            opt.value = record.worker_id;
+                            opt.textContent = `Worker #${record.worker_id} (${record.date_submitted})`;
+                            dropdown.appendChild(opt);
+                        });
+                    });
+
+                // 📋 Load full user + worker details on select
+                document.getElementById('approvalDropdown').addEventListener('change', function () {
+                    const worker_id = this.value;
+                    if (!worker_id) return;
+
+                    fetch(`/approvals/details/${worker_id}`)
+                        .then(res => res.json())
+                        .then(record => {
+                            // Build full profile cards
+                            const user = record.user;
+                            const worker = record.worker;
+
+                            document.getElementById('approvalDetails').innerHTML = `
+                                <div class="card" style="margin-bottom:1rem;">
+                                    <h3>User Profile</h3>
+                                    <p><strong>Full Name:</strong> ${user.first_name} ${user.last_name}</p>
+                                    <p><strong>Age:</strong> ${user.age}</p>
+                                    <p><strong>Gender:</strong> ${user.gender}</p>
+                                    <p><strong>Birthday:</strong> ${user.birthday}</p>
+                                    <p><strong>Contact:</strong> ${user.contact_number}</p>
+                                    <p><strong>Email:</strong> ${user.email}</p>
+                                    <p><strong>Address:</strong> ${user.address}</p>
+                                    <p><strong>Department:</strong> ${user.department}</p>
+                                    <p><strong>Relationship Status:</strong> ${user.relationship_status}</p>
+                                    <p><strong>Consent:</strong> ${user.consent}</p>
+                                    <p><em>Created at: ${user.created_at}</em></p>
+                                </div>
+
+                                <div class="card">
+                                    <h3>Worker Record</h3>
+                                    <p><strong>Role:</strong> ${worker.role}</p>
+                                    <p><strong>Position Type:</strong> ${worker.position_type}</p>
+                                    <p><strong>Department:</strong> ${worker.department}</p>
+                                    <p><strong>DOB:</strong> ${worker.date_of_birth}</p>
+                                    <p><strong>Emergency Contact:</strong> ${worker.emergency_contact_name} (${worker.emergency_contact_relationship}) - ${worker.emergency_contact_number}</p>
+                                    <p><strong>DBS Check Date:</strong> ${worker.dbs_check_date}</p>
+                                    <p><strong>DBS Certificate #:</strong> ${worker.dbs_certificate_number}</p>
+                                    <p><strong>Safeguarding Training:</strong> ${worker.safeguarding_training_date}</p>
+                                    <p><strong>Medical Conditions:</strong> ${worker.medical_conditions}</p>
+                                    <p><strong>Consent:</strong> ${worker.consent}</p>
+                                    <p><em>Created at: ${worker.created_at}</em></p>
+                                </div>
+
+                                <button id="approveBtn" style="margin-top:1rem; background:#27ae60; color:white; padding:0.8rem 1.5rem; border:none; border-radius:8px; cursor:pointer;">Approve Worker</button>
+                            `;
+
+                            document.getElementById('approveBtn').onclick = () => {
+                                fetch(`/approvals/approve/${worker_id}`, { method: 'POST' })
+                                    .then(res => res.json())
+                                    .then(resp => {
+                                        if (resp.success) {
+                                            alert("✅ Worker approved!");
+                                            document.querySelector(`#approvalDropdown option[value="${worker_id}"]`).remove();
+                                            document.getElementById('approvalDetails').innerHTML = '';
+                                            document.getElementById('approvalNotification').textContent =
+                                                document.getElementById('approvalDropdown').options.length - 1;
+                                        }
+                                    });
+                            };
+                        });
+                });
             }
+
+
 
 
         function loadAbout() {
