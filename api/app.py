@@ -88,7 +88,6 @@ def get_worker_details(user_id):
 def create_admin():
     data = request.json
     user_id = data.get("user_id")
-    worker_id = data.get("worker_id")
     role = data.get("role")
     user_name = data.get("user_name")
     email = data.get("email")
@@ -97,8 +96,24 @@ def create_admin():
     password_hash = generate_password_hash(password)
 
     cursor = connection.cursor()
+
+    # ✅ Get the worker_id (not the id!)
+    cursor.execute("""
+        SELECT worker_id
+        FROM public.agt_workers_voluntiers_records
+        WHERE user_id = %s
+    """, (user_id,))
+    worker_row = cursor.fetchone()
+
+    if not worker_row:
+        cursor.close()
+        return jsonify({"success": False, "error": "This user has no worker record"}), 400
+
+    worker_id = worker_row[0]   # correct FK target
+
     sql_insert = """
-        INSERT INTO public."agt_admin" (user_id, worker_id, role, user_name, email, password_hash, created_at, updated_at)
+        INSERT INTO public."agt_admin" 
+        (user_id, worker_id, role, user_name, email, password_hash, created_at, updated_at)
         VALUES (%s, %s, %s, %s, %s, %s, NOW(), NOW())
         RETURNING id
     """
@@ -108,6 +123,62 @@ def create_admin():
     cursor.close()
 
     return jsonify({"success": True, "admin_id": new_id})
+
+
+
+# 🔔 Get pending approvals
+@app.route('/approvals/pending')
+def get_pending_approvals():
+    cursor = connection.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("""
+        SELECT worker_id, date_submitted 
+        FROM public.worker_approval 
+        WHERE approval_status = 'pending_approval'
+    """)
+    rows = cursor.fetchall()
+    cursor.close()
+    return jsonify(rows)
+
+# 📋 Get worker details for approval
+@app.route('/approvals/details/<int:worker_id>')
+def get_approval_details(worker_id):
+    cursor = connection.cursor(cursor_factory=RealDictCursor)
+
+    # Get worker record
+    cursor.execute("""
+        SELECT *
+        FROM public.agt_workers_voluntiers_records
+        WHERE worker_id = %s
+    """, (worker_id,))
+    worker = cursor.fetchone()
+
+    # Get user record linked via user_id
+    user = None
+    if worker:
+        cursor.execute("""
+            SELECT *
+            FROM public.agt_user_data_records
+            WHERE id = %s
+        """, (worker['user_id'],))
+        user = cursor.fetchone()
+
+    cursor.close()
+    return jsonify({"user": user, "worker": worker})
+
+
+# ✅ Approve worker
+@app.route('/approvals/approve/<int:worker_id>', methods=['POST'])
+def approve_worker(worker_id):
+    cursor = connection.cursor()
+    cursor.execute("""
+        UPDATE public.worker_approval
+        SET approval_status = 'approved', date_approved = %s
+        WHERE worker_id = %s
+    """, (datetime.datetime.now(), worker_id))
+    connection.commit()
+    cursor.close()
+    return jsonify({"success": True})
+
 # =============================================================================
 
 if __name__ == '__main__':
